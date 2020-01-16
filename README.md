@@ -1,1 +1,1 @@
-# BCIT_nb_iot
+# BCIT NB IoT
