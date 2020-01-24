@@ -11,12 +11,13 @@ There are 2 (potentially 3) npm project root folders.
 - /lambda (pending)
     - will contain the lambda code
     
-            .
-            ├── client
-            │   ├── public
-            │   └── src
-            └── Deliverables
-                └── Documents
-                    ├── AWS
-                    ├── Azure
-                    └── Battery Savings 
+# Directory structure
+    .
+    ├── client
+    │   ├── public
+    │   └── src
+    └── Deliverables
+        └── Documents
+            ├── AWS
+            ├── Azure
+            └── Battery Savings 
