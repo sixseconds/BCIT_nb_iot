@@ -13,11 +13,13 @@ There are 2 (potentially 3) npm project root folders.
     
 # Directory structure
     .
+    ├── node_modules    # for the root folder (express) 
     ├── client
+    │   ├── node_modules
     │   ├── public
     │   └── src
-    └── Deliverables
-        └── Documents
-            ├── AWS
-            ├── Azure
-            └── Battery Savings 
+    ├── Deliverables
+    │   └── Documents
+    ├── lambda
+    └── ...
+    
