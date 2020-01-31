@@ -7,15 +7,23 @@ import PressureChart from '../charts/pressureChart';
 function DeviceView(props) {
     return (
         <div>
-            <h2>{props.dummyData.name}</h2>
+            <h2>{props.device.name}</h2>
+            <button
+                onClick={() => {props.updateRouteLocation(null)}}
+            >&#x2302; Home</button>
+            <button
+                onClick={() => {props.updateRouteLocation("Locations", props.device.location)}}
+            >{"Go to " + props.device.location.replace("floor", "Floor").replace(".png", "")}</button>
+            <br/>
+            <br />
             <div>
-                <TemperatureChart></TemperatureChart>
+                <TemperatureChart data={props.device.tempData}></TemperatureChart>
             </div>
             <div>
-                <HumidityChart></HumidityChart>
+                <HumidityChart data={props.device.humidityData}></HumidityChart>
             </div>
             <div>
-                <PressureChart></PressureChart>
+                <PressureChart data={props.device.pressureData}></PressureChart>
             </div>
         </div>
     );

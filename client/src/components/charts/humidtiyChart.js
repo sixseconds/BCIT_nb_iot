@@ -11,7 +11,7 @@ export class HumidityChart extends Component {
             series: [{
                 name: 'Humidity',
                 type: 'line',
-                data: [66, 58, 62, 71, 56, 69, 58, 65]
+                data: this.props.data
             }],
             options: {
                 chart: {

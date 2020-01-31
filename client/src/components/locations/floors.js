@@ -1,26 +1,39 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 
 export default function Floor(props) {
     const [devices, setDevices] = useState([]);
     const styles = {
-        deviceBlip: { width: 20, height: 20, position: "absolute", backgroundColor: "red", borderRadius: "50%" }
+        deviceBlip: { 
+            width: 20, 
+            height: 20, 
+            position: "absolute", 
+            backgroundColor: "red", 
+            borderRadius: "50%" ,
+            cursor: "pointer"
+        }
     }
 
-    useEffect(() => {
-        setDevices(/* async */ () => {
-            // let deviceData = await fetch(input);
-            // return deviceData;
+    // useEffect(() => {
+    //     setDevices(async () => {
+    //         let deviceData = await fetch(input);
+    //         return deviceData;
             
-            // returning dummy data for now insted of fetch()
-            return [
-                { id: 0, x:"25%", y:"25%" },
-                { id: 1, x:"60%", y:"50%" }
-            ]
-        });
-    }, [])
+    //         return props.devices.map((device) =>  {return { id: device.id, x: device.coords[0], y: device.coords[1] }})
+    //     });
+    // }, [])
 
     function renderDeviceView() {
-        return devices.map(device => <div key={device.id} style={Object.assign({ top: device.y, left: device.x }, styles.deviceBlip)} ></div>);
+        return props.devices.map(
+            device => <div 
+                className="device_blip"
+                key={device.id} 
+                onClick={() => {props.updateRouteLocation("Device", device.id)}}
+                style={Object.assign({ 
+                    top: device.coords[1], 
+                    left: device.coords[0] 
+                }, styles.deviceBlip)} 
+            >{ device.id }</div>
+        );
     }
     
     function renderImage() {

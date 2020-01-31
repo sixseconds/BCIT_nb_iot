@@ -10,7 +10,7 @@ export class TemperatureChart extends Component {
             series: [{
                 name: 'Temperature',
                 type: 'line',
-                data: [14, 12, 18, 11, 16, 9, 13, 15]
+                data: this.props.data
             }],
             options: {
                 chart: {

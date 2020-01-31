@@ -1,5 +1,4 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
 import Nav from './components/nav/nav.js';
 import Locations from './components/locations/locations';
@@ -23,29 +22,47 @@ const styles = {
   }
 }
 
-const dummyData = [
-  {
-    id: 0,
-    name: "iot_device_0",
-    temp: "37.2",
-    humidity: "20%",
-    pressure: "98Kpa"
-  },
-  {
-    id: 1,
-    name: "iot_device_1",
-    temp: "37.2",
-    humidity: "20%",
-    pressure: "98Kpa"
-  },
-  {
-    id: 2,
-    name: "iot_device_2",
-    temp: "37.2",
-    humidity: "20%",
-    pressure: "98Kpa"
-  }
-]
+const dummyData = {
+  allDevices: [
+    {
+      id: 0,
+      name: "iot_device_0",
+      temp: "13.4",
+      tempData: [14, 12, 18, 12, 12, 11, 16, 12],
+      humidity: "20%",
+      humidityData: [21, 20, 20, 21, 20, 20, 20, 20],
+      pressure: "98Kpa",
+      pressureData: [98, 97, 98, 99, 100, 99, 99, 99],
+      location: "floor1.png",
+      coords: ["15%", "65%"]
+    },
+    {
+      id: 1,
+      name: "iot_device_1",
+      temp: "14.2",
+      tempData: [14, 12, 12, 12, 11, 14, 14],
+      humidity: "20%",
+      humidityData: [20, 20, 22, 21, 20, 19, 20, 20],
+      pressure: "98Kpa",
+      pressureData: [99, 100, 99, 99, 99, 98, 97, 98],
+      location: "floor1.png",
+      coords: ["55%", "35%"]
+    },
+    {
+      id: 2,
+      name: "iot_device_2",
+      temp: "13.0",
+      tempData: [14, 12, 12, 11, 16, 12, 13, 13],
+      humidity: "23%",
+      humidityData: [20, 20, 20, 22, 20, 21, 21, 23],
+      pressure: "98Kpa",
+      pressureData: [98, 97, 98, 99, 100, 99, 99, 99],
+      location: "floor2.png",
+      coords: ["25%", "35%"]
+    }
+  ],
+  floors: ["floor1.png", "floor1m.png", "floor2.png"]
+}
 
 export default class App extends React.Component{
 
@@ -53,7 +70,8 @@ export default class App extends React.Component{
     super();
     this.state = {
       routeLocation: "Home",
-      deviceViewId: null
+      deviceViewId: null,
+      floorViewId: null
     }
     
     this.updateRouteLocation = this.updateRouteLocation.bind(this);
@@ -62,7 +80,8 @@ export default class App extends React.Component{
   updateRouteLocation(newLocatioon, id=null) {
     this.setState({
       routeLocation: newLocatioon,
-      deviceViewId: (id != null && newLocatioon == "Device") ? id : null
+      deviceViewId: (id != null && newLocatioon == "Device") ? id : null,
+      floorViewId: (id != null && newLocatioon == "Locations") ? id : null
     })
   }
 
@@ -75,13 +94,15 @@ export default class App extends React.Component{
         main = null;
         break;
       case "Locations":
-        main = <Locations />
+        main = (this.state.floorViewId != null) ? 
+          <Locations dummyData={dummyData} updateRouteLocation={this.updateRouteLocation} /> :
+          <Locations dummyData={dummyData} updateRouteLocation={this.updateRouteLocation} floor={this.state.floorViewId} /> 
         break;
       case "Devices":
         main = <Devices dummyData={dummyData} updateRouteLocation={this.updateRouteLocation} />
         break;
       case "Device":
-        main = <DeviceView dummyData={dummyData[this.state.deviceViewId]} />
+        main = <DeviceView device={dummyData.allDevices[this.state.deviceViewId]} updateRouteLocation={this.updateRouteLocation} />
         break;
     }
     

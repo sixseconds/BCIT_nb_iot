@@ -10,7 +10,7 @@ export class PressureChart extends Component {
             series: [{
                 name: 'Pressure',
                 type: 'line',
-                data: [980, 1002, 992, 911, 1016, 982, 1013, 1015]
+                data: this.props.data
             }],
             options: {
                 chart: {
