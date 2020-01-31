@@ -1,26 +1,30 @@
-import React, { Component } from 'react';
+import React, {
+    Component
+} from 'react';
+
 import Chart from 'react-apexcharts';
 
-export class ChartTemplate extends Component {
+export class HumidityChart extends Component {
     constructor(props) {
         super(props);
         this.state = {
             series: [{
-                name: 'Temperature',
-                type: 'column',
-                data: [14, 12, 18, 11, 16, 9, 13, 15]
+                name: 'Humidity',
+                type: 'line',
+                data: [66, 58, 62, 71, 56, 69, 58, 65]
             }],
             options: {
                 chart: {
                     height: 400,
-                    type: 'line',                    
+                    type: 'line',
+                    id: "Humidity"
                 },
                 title: {
-                    text: "Temperature",
-                    align: 'centre'
+                    text: "Humidity",
+                    align: 'left',
                 },
                 xaxis: {
-                    categories: ['Jan 12', 'Jan 13', 'Jan 14', 'Jan 15', 'Jan 16', 'Jan 17', 'Jan 18', 'Jan 19'] 
+                    categories: ['Jan 12', 'Jan 13', 'Jan 14', 'Jan 15', 'Jan 16', 'Jan 17', 'Jan 18', 'Jan 19']
                 },
                 yaxis: {
                     show: true,
@@ -32,18 +36,16 @@ export class ChartTemplate extends Component {
                         style: {
                             color: 'black',
                             fontSize: '12px',
-                            cssClass: 'apexcharts-yaxis-label',
                         },
                     },
                     title: {
-                        text: 'Temperature (Celsius)',
+                        text: 'Humiduty (%)',
                         style: {
                             color: 'blue',
                             fontSize: '12px',
-                            cssClass: 'apexcharts-yaxis-title',
                         },
                     },
-                    
+
                 },
                 grid: {
                     row: {
@@ -55,23 +57,22 @@ export class ChartTemplate extends Component {
             },
         };
     }
-
     render() {
-        return (
-            <div className='app'>
-                <div className='row'>
-                    <div className='mixed-chart'>
-                        <Chart
-                            options={this.state.options}
-                            series={this.state.series}
-                            type='line'
-                            width='500'
+        return ( 
+            <div className = 'app' >
+                <div className = 'row' >
+                    <div className = 'mixed-chart' >
+                        <Chart 
+                            options = {this.state.options}
+                            series = {this.state.series}
+                            type = 'line'
+                            width = '500' 
                         />
-                    </div>
-                </div>
+                    </div> 
+                </div> 
             </div>
         );
     }
 }
 
-export default ChartTemplate
+export default HumidityChart
