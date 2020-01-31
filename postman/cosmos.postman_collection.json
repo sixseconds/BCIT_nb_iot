@@ -1,0 +1,96 @@
+{
+	"info": {
+		"_postman_id": "24f156f0-041e-4d11-9c2c-cb4b6da79a35",
+		"name": "cosmos",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "cosmos get underground data",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "be6680b3-535f-4731-8bbd-e6c054f37e99",
+						"exec": [
+							"var now = new Date().toUTCString();\r",
+							"pm.environment.set(\"utcDate\", now);\r",
+							"\r",
+							"var verb = 'GET';\r",
+							"var resourceType = pm.variables.get(\"resourceType\");\r",
+							"var resourceId = pm.variables.get(\"resourceId\");\r",
+							"\r",
+							"var text = (verb || \"\").toLowerCase() + \"\\n\" + (resourceType || \"\").toLowerCase() + \"\\n\" + (resourceId || \"\") + \"\\n\" + now.toLowerCase() + \"\\n\" + \"\" + \"\\n\";\r",
+							"var key = CryptoJS.enc.Base64.parse(pm.variables.get(\"masterKey\"));\r",
+							"var signature = CryptoJS.HmacSHA256(text, key).toString(CryptoJS.enc.Base64);\r",
+							"\r",
+							"var MasterToken = \"master\";\r",
+							"var TokenVersion = \"1.0\";\r",
+							"var authToken = encodeURIComponent(\"type=\" + MasterToken + \"&ver=\" + TokenVersion + \"&sig=\" + signature);\r",
+							"\r",
+							"pm.environment.set(\"authToken\", authToken);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-ms-version",
+						"name": "Content-Type",
+						"value": "2018-12-31",
+						"type": "text"
+					},
+					{
+						"key": "x-ms-date",
+						"value": "{{utcDate}}",
+						"type": "text"
+					},
+					{
+						"key": "authorization",
+						"value": "{{authToken}}",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://undergroundcosmos.documents.azure.com/dbs/outDatabase/colls/UndergroundData/docs",
+					"protocol": "https",
+					"host": [
+						"undergroundcosmos",
+						"documents",
+						"azure",
+						"com"
+					],
+					"path": [
+						"dbs",
+						"outDatabase",
+						"colls",
+						"UndergroundData",
+						"docs"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
