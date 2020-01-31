@@ -3,23 +3,23 @@ import React, {
 } from 'react';
 import Chart from 'react-apexcharts';
 
-export class PressureChart extends Component {
+export class TemperatureChart extends Component {
     constructor(props) {
         super(props);
         this.state = {
             series: [{
-                name: 'Pressure',
+                name: 'Temperature',
                 type: 'line',
-                data: [980, 1002, 992, 911, 1016, 982, 1013, 1015]
+                data: this.props.data
             }],
             options: {
                 chart: {
                     height: 400,
                     type: 'line',
-                    id: "Pressure"
+                    id: "Temperature"
                 },
                 title: {
-                    text: "Pressure",
+                    text: "Temperature",
                     align: 'left',
                 },
                 xaxis: {
@@ -38,7 +38,7 @@ export class PressureChart extends Component {
                         },
                     },
                     title: {
-                        text: 'Pressure (hPa)',
+                        text: 'Temperature (Celsius)',
                         style: {
                             color: 'blue',
                             fontSize: '12px',
@@ -56,6 +56,7 @@ export class PressureChart extends Component {
             },
         };
     }
+
     render() {
         return ( 
             <div className = 'app' >
@@ -74,4 +75,4 @@ export class PressureChart extends Component {
     }
 }
 
-export default PressureChart
+export default TemperatureChart

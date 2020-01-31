@@ -36,3 +36,28 @@
     transform: rotate(360deg);
   }
 }
+
+button {
+  padding: 10px;
+  border-radius: 2%;
+  border: 3px solid black;
+  transition: all 0.2s;
+  cursor: pointer;
+  margin: 0rem 0.25rem;
+}
+
+button:hover {
+  background-color: black;
+  color: white;
+}
+
+.device_blip {
+  border: 5px solid transparent;
+  color: white;
+  font-weight: bold;
+  text-align: center;
+}
+
+.device_blip:hover {
+  border: 5px solid black;
+}
