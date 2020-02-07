@@ -77,11 +77,11 @@ export default class App extends React.Component{
     this.updateRouteLocation = this.updateRouteLocation.bind(this);
   }
   
-  updateRouteLocation(newLocatioon, id=null) {
+  updateRouteLocation(newLocation, id=null) {
     this.setState({
-      routeLocation: newLocatioon,
-      deviceViewId: (id != null && newLocatioon == "Device") ? id : null,
-      floorViewId: (id != null && newLocatioon == "Locations") ? id : null
+      routeLocation: newLocation,
+      deviceViewId: (id !== null && newLocation === "Device") ? id : null,
+      floorViewId: (id !== null && newLocation === "Locations") ? id : null
     })
   }
 
