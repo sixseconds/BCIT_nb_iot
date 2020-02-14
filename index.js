@@ -1,5 +1,13 @@
-var app = require('express');
+var express = require('express');
 var AWS = require('aws-sdk');
+var cors = require('cors');
+
+
+
+var app = express();
+
+
+app.use(cors());
 
 // AWS.config.update({region: 'us-west-2'});
 
@@ -31,26 +39,27 @@ var docClient = new AWS.DynamoDB.DocumentClient();
 
 var table = "bcit-iot";
 
-var year = 2015;
-var title = "The Big New Movie";
-
 var params = {
     TableName:table,
-    Item:{
-        "id": "1",
-        "device": "device1"
+    Key:{
+        "id": "1"
     }
 };
 
 console.log("Adding a new item...");
-docClient.put(params, function(err, data) {
-    if (err) {
-        console.error("Unable to add item. Error JSON:", JSON.stringify(err, null, 2));
-    } else {
-        console.log("Added item:", JSON.stringify(data, null, 2));
-    }
-});
+app.get('/getdata', (req, res) => {
 
+    console.log('eeeee')
+    docClient.get(params, function(err, data) {
+        if (err) {
+            console.error("Unable to get item. Error JSON:", JSON.stringify(err, null, 2));
+        } else {
+            console.log("got item:", JSON.stringify(data, null, 2));
+            res.json(data.Item);
+        }
+    });
+})
 
+app.listen(3000);
 
 

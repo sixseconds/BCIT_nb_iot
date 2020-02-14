@@ -18,6 +18,8 @@
   },
   "homepage": "https://github.com/glowinginthedark/BCIT_nb_iot#readme",
   "dependencies": {
+    "aws-sdk": "^2.618.0",
+    "cors": "^2.8.5",
     "express": "^4.17.1"
   }
 }

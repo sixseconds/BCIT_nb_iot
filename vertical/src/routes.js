@@ -81,6 +81,7 @@ import Iconsdripicons from './containers/MainContent/icons/icons-dripicons';
 
 import Mapsgoogle from './containers/MainContent/maps/maps-google';
 import Mapsvector from './containers/MainContent/maps/maps-vector';
+import Locations from './components/Layout/IoTLocations';
 
 const routes = [
 
@@ -101,6 +102,7 @@ const routes = [
     { path: '/email-inbox', component: EmailInbox },
     { path: '/email-read', component: EmailRead },
     { path: '/email-compose', component: EmailCompose },
+    { path: '/iot_locations', component: Locations },
 
     { path: '/calendar', component: Calendar },
 

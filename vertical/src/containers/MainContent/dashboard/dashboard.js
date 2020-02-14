@@ -143,7 +143,7 @@ class Dashboard extends Component {
                                     <CardBody>
                                         <h4 className="mt-0 header-title mb-4">Device 2</h4>
                                         <div id="area-chart">
-                                            <Apexarea />
+                                            <Apexarea dynamo={true} />
                                         </div>
                                     </CardBody>
                                 </Card>
