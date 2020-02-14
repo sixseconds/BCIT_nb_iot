@@ -76,7 +76,7 @@ class Dashboard extends Component {
                                 <div className="col-sm-6">
                                     <h4 className="page-title">Dashboard</h4>
                                     <ol className="breadcrumb">
-                                        <li className="breadcrumb-item active">Welcome to Veltrix Dashboard</li>
+                                        <li className="breadcrumb-item active">Welcome to BCIT IOT Dashboard!!</li>
                                     </ol>
                                 </div>
                                 <div className="col-sm-6">
@@ -87,7 +87,7 @@ class Dashboard extends Component {
                             </div>
                         </div>
 
-                        <Row>
+                        {/* <Row>
                             <Col lg="4">
                                 <Card className="mini-stat bg-pattern">
                                     <CardBody className="mini-stat-img">
@@ -124,13 +124,13 @@ class Dashboard extends Component {
                                     </CardBody>
                                 </Card>
                             </Col>
-                        </Row>
+                        </Row> */}
 
                         <Row>
                             <Col xl="4">
                                 <Card>
                                     <CardBody>
-                                        <h4 className="mt-0 header-title mb-4">Weekly Sales</h4>
+                                        <h4 className="mt-0 header-title mb-4">Device 1</h4>
                                         <div id="area-chart">
                                             <Apexarea />
                                         </div>
@@ -138,7 +138,29 @@ class Dashboard extends Component {
                                 </Card>
                             </Col>
 
-                            <Col xl="8">
+                            <Col xl="4">
+                                <Card>
+                                    <CardBody>
+                                        <h4 className="mt-0 header-title mb-4">Device 2</h4>
+                                        <div id="area-chart">
+                                            <Apexarea />
+                                        </div>
+                                    </CardBody>
+                                </Card>
+                            </Col>
+
+                            <Col xl="4">
+                                <Card>
+                                    <CardBody>
+                                        <h4 className="mt-0 header-title mb-4">Device 3</h4>
+                                        <div id="area-chart">
+                                            <Apexarea />
+                                        </div>
+                                    </CardBody>
+                                </Card>
+                            </Col>
+
+                            {/* <Col xl="8">
                                 <Card>
                                     <CardBody>
                                         <h4 className="mt-0 header-title mb-4">Email Sent</h4>
@@ -147,10 +169,45 @@ class Dashboard extends Component {
                                         </div>
                                     </CardBody>
                                 </Card>
-                            </Col>
+                            </Col> */}
                         </Row>
 
                         <Row>
+                            <Col xl="4">
+                                <Card>
+                                    <CardBody>
+                                        <h4 className="mt-0 header-title mb-4">Device 4</h4>
+                                        <div id="area-chart">
+                                            <Apexarea />
+                                        </div>
+                                    </CardBody>
+                                </Card>
+                            </Col>
+
+                            <Col xl="4">
+                                <Card>
+                                    <CardBody>
+                                        <h4 className="mt-0 header-title mb-4">Device 5</h4>
+                                        <div id="area-chart">
+                                            <Apexarea />
+                                        </div>
+                                    </CardBody>
+                                </Card>
+                            </Col>
+
+                            {/* <Col xl="8">
+                                <Card>
+                                    <CardBody>
+                                        <h4 className="mt-0 header-title mb-4">Email Sent</h4>
+                                        <div id="column-chart" dir="ltr">
+                                            <Apexbar />
+                                        </div>
+                                    </CardBody>
+                                </Card>
+                            </Col> */}
+                        </Row>
+
+                        {/* <Row>
                             <Col xl="4">
                                 <Card>
                                     <CardBody>
@@ -268,8 +325,8 @@ class Dashboard extends Component {
                                     </CardBody>
                                 </Card>
                             </Col>
-                        </Row>
-                        <Row>
+                        </Row> */}
+                        {/* <Row>
                             <Col xl="8">
                                 <Card>
                                     <CardBody>
@@ -508,13 +565,13 @@ class Dashboard extends Component {
                                     </CardBody>
                                 </Card>
                             </Col>
-                        </Row>
+                        </Row> */}
                     </div>
                 </div>
 
-                <Rightsidebar>
+                {/* <Rightsidebar>
                     <DashboardRightSidebar />
-                </Rightsidebar>
+                </Rightsidebar> */}
             </React.Fragment>
         );
     }

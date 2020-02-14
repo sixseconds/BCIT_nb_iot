@@ -16,7 +16,7 @@ const SideNav = () => { return <div id="sidebar-menu">
                                 </Link>
                             </li>
 
-                            <li className="menu-title">Apps</li>
+                            {/* <li className="menu-title">Apps</li>
                             <li>
                                 <Link to="/#" className="waves-effect"><i className="ion ion-md-mail"></i><span> Email <span className="float-right menu-arrow"><i className="mdi mdi-chevron-right"></i></span> </span></Link>
                                 <ul className="submenu">
@@ -43,21 +43,31 @@ const SideNav = () => { return <div id="sidebar-menu">
 
                             <li>
                                 <Link to="projects" className="waves-effect waves-light"><i className="ion ion-md-clipboard"></i><span> Projects </span></Link>
-                            </li>
+                            </li> */}
 
                             <li className="menu-title">Pages</li>
 
                             <li>
-                                <Link to="/#" className="waves-effect"><i className="ion ion-md-wifi"></i><span> Authentication <span className="badge badge-pill badge-light float-right">New</span> </span></Link>
-                                <ul className="submenu">
+                                <Link to="/iot_devices" className="waves-effect"><i className="ion ion-md-wifi"></i><span> Devices <span className="badge badge-pill badge-light float-right">New</span> </span></Link>
+                                {/* <ul className="submenu">
                                     <li><Link to="pages-login-2">Login Two</Link></li>
                                     <li><Link to="pages-register-2">Register Two</Link></li>
                                     <li><Link to="pages-recoverpw-2">Recover Password Two</Link></li>
                                     <li><Link to="pages-lock-screen-2">Lock Screen Two</Link></li>
-                                </ul>
+                                </ul> */}
                             </li>
 
                             <li>
+                                <Link to="/iot_locations" className="waves-effect"><i className="ion ion-md-wifi"></i><span> Locations <span className="badge badge-pill badge-light float-right">New</span> </span></Link>
+                                {/* <ul className="submenu">
+                                    <li><Link to="pages-login-2">Login Two</Link></li>
+                                    <li><Link to="pages-register-2">Register Two</Link></li>
+                                    <li><Link to="pages-recoverpw-2">Recover Password Two</Link></li>
+                                    <li><Link to="pages-lock-screen-2">Lock Screen Two</Link></li>
+                                </ul> */}
+                            </li>
+
+                            {/* <li>
                                 <Link to="/#" className="waves-effect"><i className="ion ion-md-copy"></i><span> Extra Pages <span className="float-right menu-arrow"><i className="mdi mdi-chevron-right"></i></span> </span></Link>
                                 <ul className="submenu">
                                     <li><Link to="pages-blank">Blank Page</Link></li>
@@ -78,9 +88,9 @@ const SideNav = () => { return <div id="sidebar-menu">
                                     <li><Link to="email-template-alert">Alert Email</Link></li>
                                     <li><Link to="email-template-billing">Billing Email</Link></li>
                                 </ul>
-                            </li>
+                            </li> */}
 
-                            <li className="menu-title">Layouts</li>
+                            {/* <li className="menu-title">Layouts</li>
 
                             <li>
                                 <Link to="layout-light-sidebar" className="waves-effect">
@@ -182,7 +192,7 @@ const SideNav = () => { return <div id="sidebar-menu">
                                         </ul>
                                     </li>
                                 </ul>
-                            </li>
+                            </li> */}
                         </ul>
     </div>
 }

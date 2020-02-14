@@ -35,14 +35,24 @@ class Apexarea extends Component {
                 },
             },
                 series : [{
-                    name: 'Series 1',
-                    data: [22, 54, 42, 84, 48]
+                    name: 'Temperature',
+                    data: Array.from({length: 20}, () => 15 + Math.floor(Math.random() * 3))
                 }, {
-                    name: 'Series 2',
-                    data: [11, 32, 60, 32, 34]
+                    name: 'Pressure',
+                    data: Array.from({length: 20}, () => 15 + Math.floor(Math.random() * 8))
                 }]
             
             }
+        }
+
+    fetchIcons () {
+        fetch('https://localhost:3000/getdata')
+            .then(response => response.json())
+            .then(data => {
+            this.setState({
+                data: data
+            })
+            })
         }
 
     render() {
