@@ -1,30 +1,62 @@
 import React, {
     Component
 } from 'react';
-import Chart from 'react-apexcharts';
+import ReactApexChart from 'react-apexcharts';
 
+// Chart for single pressure reading
 export class PressureChart extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            // Chart data
             series: [{
                 name: 'Pressure',
                 type: 'line',
                 data: this.props.data
             }],
+            // Chart Styling
             options: {
                 chart: {
-                    height: 400,
+                    height: 500,
                     type: 'line',
-                    id: "Pressure"
+                    id: "Pressure",
+                    foreColor: '#000000',
+                    stacked: false,
+                    toolbar: {
+                        show: false
+                    }
                 },
+                // Chart title
+                title: {
+                    text: 'Pressure',
+                    align: 'center'
+                },
+                // Chart theme
+                theme: {
+                    mode: 'light',
+                    palette: 'palette8',
+                },
+                // Chart title
                 title: {
                     text: "Pressure",
-                    align: 'left',
+                    align: 'center',
+                        style: {
+                            fontSize: '14px',
+                            fontWeight: 'bold',
+                            fontFamily: undefined,
+                            color: '#FFFFFF'
+                        },
                 },
+                markers: {
+                    size: 5,
+                    style: 'inverted'
+                },
+                // X axis options
                 xaxis: {
-                    categories: ['Jan 12', 'Jan 13', 'Jan 14', 'Jan 15', 'Jan 16', 'Jan 17', 'Jan 18', 'Jan 19']
+                    categories: ['Jan 12', 'Jan 13', 'Jan 14', 'Jan 15', 'Jan 16', 'Jan 17', 'Jan 18', 'Jan 19'],
+                    title: 'Day'
                 },
+                // Y axis options
                 yaxis: {
                     show: true,
                     showAlways: true,
@@ -33,24 +65,24 @@ export class PressureChart extends Component {
                         show: true,
                         align: 'right',
                         style: {
-                            color: 'black',
                             fontSize: '12px',
                         },
                     },
                     title: {
                         text: 'Pressure (hPa)',
                         style: {
-                            color: 'blue',
                             fontSize: '12px',
                         },
                     },
 
                 },
+                // grid styling
                 grid: {
+                    borderColor: '#FFFFFF', // line color
+                    show: true,                
                     row: {
-                        colors: ['#f3f3f3', 'transparent'], // takes an array which will be repeated on columns
-                        opacity: 0.5
-                    },
+                        colors: ['#A0A0A0'] // background color
+                    }
                 },
 
             },
@@ -61,7 +93,7 @@ export class PressureChart extends Component {
             <div className = 'app' >
                 <div className = 'row' >
                     <div className = 'mixed-chart' >
-                        <Chart 
+                        <ReactApexChart 
                             options = {this.state.options}
                             series = {this.state.series}
                             type = 'line'

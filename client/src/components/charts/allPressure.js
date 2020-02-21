@@ -1,58 +1,75 @@
 import React, {
     Component
 } from 'react';
+
 import ReactApexChart from 'react-apexcharts';
 
-// Chart for single temperature readings
-export class TemperatureChart extends Component {
+// Chart to show pressure readings from each device
+export class AllPressureChart extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            // Chart data
-            series: [{
-                name: 'Temperature',
-                type: 'line',
-                data: this.props.data,
-                
-            }],
+            // data for each series
+            series: [
+                {
+                    // device 1 pressure 
+                    name: 'Device1',
+                    type: 'line',
+                    data: '', // TODO: add data
+                }, {
+                    // device 2 pressure
+                    name: 'Device2',
+                    type: 'line',
+                    data: '', // TODO: add data
+                }, {
+                    // device 2 pressure
+                    name: 'Device3',
+                    type: 'line',
+                    data: '', // TODO: add data
+                }, {
+                    // as many for each device
+                },
+            ],
+            // Chart Styling
             options: {
-                // chart style
                 chart: {
                     height: 500,
                     type: 'line',
-                    id: "Temperature",
+                    id: "allPressure",
                     foreColor: '#000000',
                     stacked: false,
                     toolbar: {
                         show: false
-                    }
+                    }                    
                 },
-                // Chart title
                 title: {
-                    text: "Temperature",
-                    align: 'center',
-                    style: {
-                        fontSize: 16,
-                        
-                    }
+                    text: "Pressure From All Devices",
+                    align: 'left',
                 },
-                // Chart theme
                 theme: {
                     mode: 'light',
                     palette: 'palette8',
                 },
-                // Markers where data points align  
+                legend: {
+                    showForSingleSeries: false,
+                    position: 'bottom',
+                    horizontalAlign: 'center',
+                    offsetY: 10,
+                    height: 50,
+                    onItemClick:{
+                        toggleDataSeries: true
+                    },
+                },
                 markers: {
                     size: 5,
                     style: 'inverted'
                 },
-                // Options for the x axis
-                // TODO: make x axis datalabels real time
                 xaxis: {
-                    categories: ['Jan 12', 'Jan 13', 'Jan 14', 'Jan 15', 'Jan 16', 'Jan 17', 'Jan 18', 'Jan 19'],
                     type: 'datetime',
+                    categories: ['Jan 12', 'Jan 13', 'Jan 14', 'Jan 15', 'Jan 16', 'Jan 17', 'Jan 18', 'Jan 19'],
+                    tickPlacement: 'on',
+                    
                 },
-                // Options for the y axis
                 yaxis: {
                     show: true,
                     showAlways: true,
@@ -61,18 +78,20 @@ export class TemperatureChart extends Component {
                         show: true,
                         align: 'right',
                         style: {
+                            color: 'black',
                             fontSize: '12px',
                         },
                     },
                     title: {
-                        text: 'Temperature (Celsius)',
+                        text: 'Pressure (hPa)',
                         style: {
+                            color: 'black',
                             fontSize: '12px',
                         },
                     },
 
                 },
-                // grid background style
+                // grid styling
                 grid: {
                     borderColor: '#FFFFFF', // line color
                     show: true,                
@@ -80,10 +99,10 @@ export class TemperatureChart extends Component {
                         colors: ['#A0A0A0'] // background color
                     }
                 },
+
             },
         };
     }
-
     render() {
         return ( 
             <div className = 'app' >
@@ -102,4 +121,4 @@ export class TemperatureChart extends Component {
     }
 }
 
-export default TemperatureChart
+export default AllPressureChart
