@@ -12,7 +12,9 @@ const SideNav = () => { return <div id="sidebar-menu">
                             <li className="menu-title">Overview</li>
                             <li>
                                 <Link to="/dashboard" className="waves-effect">
-                                    <i className="ion ion-md-speedometer"></i><span className="badge badge-success badge-pill float-right">2</span> <span> Dashboard </span>
+                                    <i className="ion ion-md-speedometer"></i>
+                                        {/* <span className="badge badge-success badge-pill float-right">2</span> */}
+                                    <span> Dashboard </span>
                                 </Link>
                             </li>
 
@@ -48,7 +50,13 @@ const SideNav = () => { return <div id="sidebar-menu">
                             <li className="menu-title">Pages</li>
 
                             <li>
-                                <Link to="/iot_devices" className="waves-effect"><i className="ion ion-md-wifi"></i><span> Devices <span className="badge badge-pill badge-light float-right">New</span> </span></Link>
+                                <Link to="/iot_devices" className="waves-effect">
+                                    <i className="ion ion-md-cube"></i>
+                                    <span> 
+                                        Devices
+                                        {/* <span className="badge badge-pill badge-light float-right">New</span> */}
+                                    </span>
+                                </Link>
                                 {/* <ul className="submenu">
                                     <li><Link to="pages-login-2">Login Two</Link></li>
                                     <li><Link to="pages-register-2">Register Two</Link></li>
@@ -58,7 +66,29 @@ const SideNav = () => { return <div id="sidebar-menu">
                             </li>
 
                             <li>
-                                <Link to="/iot_locations" className="waves-effect"><i className="ion ion-md-wifi"></i><span> Locations <span className="badge badge-pill badge-light float-right">New</span> </span></Link>
+                                <Link to="/iot_locations" className="waves-effect">
+                                    <i className="ion ion-md-pin"></i>
+                                    <span>
+                                        Locations
+                                        {/* <span className="badge badge-pill badge-light float-right">New</span>  */}
+                                    </span>
+                                </Link>
+                                {/* <ul className="submenu">
+                                    <li><Link to="pages-login-2">Login Two</Link></li>
+                                    <li><Link to="pages-register-2">Register Two</Link></li>
+                                    <li><Link to="pages-recoverpw-2">Recover Password Two</Link></li>
+                                    <li><Link to="pages-lock-screen-2">Lock Screen Two</Link></li>
+                                </ul> */}
+                            </li>
+
+                            <li>
+                                <Link to="/iot_parameters" className="waves-effect">
+                                    <i className="ion ion-md-analytics"></i>
+                                    <span>
+                                        Parameters
+                                        {/* <span className="badge badge-pill badge-light float-right">New</span>  */}
+                                    </span>
+                                </Link>
                                 {/* <ul className="submenu">
                                     <li><Link to="pages-login-2">Login Two</Link></li>
                                     <li><Link to="pages-register-2">Register Two</Link></li>

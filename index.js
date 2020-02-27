@@ -39,18 +39,30 @@ var docClient = new AWS.DynamoDB.DocumentClient();
 
 var table = "bcit-iot";
 
+// var params = {
+//     TableName:table,
+//     Key:{
+//         "id": Date.now()
+//     }
+// };
+
 var params = {
-    TableName:table,
-    Key:{
-        "id": "1"
+    TableName: "bcit-iot",
+    ProjectionExpression: "#id, device, humidity, #temp, pressure",
+    FilterExpression: "#id between :start_yr and :end_yr",
+    ExpressionAttributeNames: {
+        "#id": "id",
+        "#temp": "temp"
+    },
+    ExpressionAttributeValues: {
+         ":start_yr": (Date.now() - 100000).toString(),
+         ":end_yr": (Date.now()).toString()
     }
-};
+}
 
-console.log("Adding a new item...");
+
 app.get('/getdata', (req, res) => {
-
-    console.log('eeeee')
-    docClient.get(params, function(err, data) {
+    docClient.scan(params, function(err, data) {
         if (err) {
             console.error("Unable to get item. Error JSON:", JSON.stringify(err, null, 2));
         } else {
@@ -60,6 +72,6 @@ app.get('/getdata', (req, res) => {
     });
 })
 
-app.listen(3000);
+app.listen(3010);
 
 

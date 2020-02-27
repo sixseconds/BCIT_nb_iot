@@ -5,28 +5,56 @@ import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Settingmenu from '../Subpages/Settingmenu';
 import { Link } from 'react-router-dom';
-import classnames from 'classnames';
 
-import Rightsidebar from '../../../components/RightSidebar';
-//Charts
-import Apexarea from '../../../containers/charts/apex/apexarea';
-import Apexbar from '../../../containers/charts/apex/apexbar';
 import Apexchart1 from '../../../containers/charts/apex/apexchart1';
 import Apexchart2 from '../../../containers/charts/apex/apexchart2';
 import Apexchart3 from '../../../containers/charts/apex/apexchart3';
-import Apexradial from '../../../containers/charts/apex/apexradial';
-import Apexradial2 from '../../../containers/charts/apex/apexradial2';
-import Apexsocial from '../../../containers/charts/apex/apexsocial';
 
-//Images
-import user2 from '../../../images/users/user-2.jpg';
-import user3 from '../../../images/users/user-3.jpg';
-import user4 from '../../../images/users/user-4.jpg';
-import user5 from '../../../images/users/user-5.jpg';
-import user6 from '../../../images/users/user-6.jpg';
-import user7 from '../../../images/users/user-7.jpg';
+//Charts
+import Apexarea from '../../../containers/charts/apex/apexarea';
+import axios from 'axios';
 
-import DashboardRightSidebar from './rightbar';
+const dummyData = {
+    allDevices: [
+      {
+        id: 0,
+        name: "iot_device_0",
+        temp: "13.4",
+        tempData: [14, 12, 18, 12, 12, 11, 16, 12],
+        humidity: "20%",
+        humidityData: [21, 20, 20, 21, 20, 20, 20, 20],
+        pressure: "98Kpa",
+        pressureData: [98, 97, 98, 99, 100, 99, 99, 99],
+        location: "floor1.png",
+        coords: ["15%", "65%"]
+      },
+      {
+        id: 1,
+        name: "iot_device_1",
+        temp: "14.2",
+        tempData: [14, 12, 12, 12, 11, 14, 14],
+        humidity: "20%",
+        humidityData: [20, 20, 22, 21, 20, 19, 20, 20],
+        pressure: "98Kpa",
+        pressureData: [99, 100, 99, 99, 99, 98, 97, 98],
+        location: "floor1.png",
+        coords: ["55%", "35%"]
+      },
+      {
+        id: 2,
+        name: "iot_device_2",
+        temp: "13.0",
+        tempData: [14, 12, 12, 11, 16, 12, 13, 13],
+        humidity: "23%",
+        humidityData: [20, 20, 20, 22, 20, 21, 21, 23],
+        pressure: "98Kpa",
+        pressureData: [98, 97, 98, 99, 100, 99, 99, 99],
+        location: "floor2.png",
+        coords: ["25%", "35%"]
+      }
+    ],
+    floors: ["floor1.png", "floor1m.png", "floor2.png"]
+  }
 
 class Dashboard extends Component {
 
@@ -37,16 +65,16 @@ class Dashboard extends Component {
         this.toggleMessages = this.toggleMessages.bind(this);
     }
 
+    getData () {
+        axios.get('http://localhost:3010/getdata')
+            .then(d => console.log(d))
+    }
+
     componentDidMount() {
         this.props.activateAuthLayout();
-        // document.body.classList = "";
-        // if (this.props.location.pathname === '/layout-light') {
-        //     document.body.classList.add('left-side-menu-light');
-        // }
-        // else if (this.props.location.pathname === '/layout-collapsed') {
-        //     document.body.classList.toggle('enlarged');
-        // }
-        // else { }
+        // setInterval(() => {
+        //     this.getData();
+        // }, 2000);
     }
 
     toggleStock(tab) {
@@ -65,18 +93,82 @@ class Dashboard extends Component {
         }
     }
 
+    renderGrid () {
+        return dummyData.allDevices.map(device => {
+            return (
+                <Col xl="4">
+                    <Card>
+                        <CardBody>
+                            <h4 className="mt-0 header-title">{device.name}</h4>
+                            <div>
+                                <div className="wid-earning">
+                                    <div className="row">
+                                        <div className="col-md-6">
+                                            <div>
+                                                <h5 className="mt-0">{device.temp} &#176;C</h5>
+                                                <p className="text-muted mb-md-0">Latest temperature update</p>
+                                            </div>
+                                        </div>
+                                        <div className="col-md-5">
+                                            <div id="chart1">
+                                                <Apexchart1 data={device.tempData} />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="wid-earning">
+                                    <div className="row">
+                                        <div className="col-md-6">
+                                            <div>
+                                                <h5 className="mt-0">{device.pressure}</h5>
+                                                <p className="text-muted mb-md-0">Latest pressure update</p>
+                                            </div>
+                                        </div>
+                                        <div className="col-md-5">
+                                            <div id="chart2">
+                                                <Apexchart2 data={device.pressureData} />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="wid-earning">
+                                    <div className="row">
+                                        <div className="col-md-6">
+                                            <div>
+                                                <h5 className="mt-0">{device.humidity}</h5>
+                                                <p className="text-muted mb-md-0">Latest humidity update</p>
+
+                                            </div>
+                                        </div>
+                                        <div className="col-md-5">
+                                            <div id="chart3">
+                                                <Apexchart3 data={device.humidityData} />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </CardBody>
+                    </Card>
+                </Col>
+            )
+        })
+    }
+
     render() {
+
+        let grid = this.renderGrid()
 
         return (
             <React.Fragment>
-                <div className="content dasboard-content">
+                <div className="content">
                     <div className="container-fluid">
                         <div className="page-title-box">
                             <div className="row align-items-center">
                                 <div className="col-sm-6">
                                     <h4 className="page-title">Dashboard</h4>
                                     <ol className="breadcrumb">
-                                        <li className="breadcrumb-item active">Welcome to BCIT IOT Dashboard!!</li>
+                                        <li className="breadcrumb-item active">Latest updates from IoT devices</li>
                                     </ol>
                                 </div>
                                 <div className="col-sm-6">
@@ -87,485 +179,25 @@ class Dashboard extends Component {
                             </div>
                         </div>
 
-                        {/* <Row>
+                        <Row>
                             <Col lg="4">
                                 <Card className="mini-stat bg-pattern">
                                     <CardBody className="mini-stat-img">
                                         <div className="mini-stat-icon">
                                             <i className="dripicons-broadcast bg-soft-primary text-primary float-right h4"></i>
                                         </div>
-                                        <h6 className="text-uppercase mb-3 mt-0">Orders</h6>
-                                        <h5 className="mb-3">1,687</h5>
-                                        <p className="text-muted mb-0"><span className="text-success mr-2"> 12% <i className="mdi mdi-arrow-up"></i> </span> From previous period</p>
+                                        <h6 className="text-uppercase mb-3 mt-0">Last update</h6>
+                                        <h5 className="mb-3">iot_device_0 @ 10:36 AM</h5>
+                                        <p className="text-muted mb-0"><span className="text-success mr-2"> Temperature 5% <i className="mdi mdi-arrow-up"></i> </span> From previous update</p>
                                     </CardBody>
                                 </Card>
                             </Col>
-                            <Col lg="4">
-                                <Card className="mini-stat bg-pattern">
-                                    <CardBody className="mini-stat-img">
-                                        <div className="mini-stat-icon">
-                                            <i className="dripicons-box bg-soft-primary text-primary float-right h4"></i>
-                                        </div>
-                                        <h6 className="text-uppercase mb-3 mt-0">Revenue</h6>
-                                        <h5 className="mb-3">$ 48,265</h5>
-                                        <p className="text-muted mb-0"><span className="text-danger mr-2"> -26% <i className="mdi mdi-arrow-down"></i> </span> From previous period</p>
-                                    </CardBody>
-                                </Card>
-                            </Col>
-                            <Col lg="4">
-                                <Card className="mini-stat bg-pattern">
-                                    <CardBody className="mini-stat-img">
-                                        <div className="mini-stat-icon">
-                                            <i className="dripicons-tags bg-soft-primary text-primary float-right h4"></i>
-                                        </div>
-                                        <h6 className="text-uppercase mb-3 mt-0">Average Price</h6>
-                                        <h5 className="mb-3">$ 14.6</h5>
-                                        <p className="text-muted mb-0"><span className="text-danger mr-2"> -26% <i className="mdi mdi-arrow-down"></i> </span> From previous period</p>
-                                    </CardBody>
-                                </Card>
-                            </Col>
-                        </Row> */}
-
-                        <Row>
-                            <Col xl="4">
-                                <Card>
-                                    <CardBody>
-                                        <h4 className="mt-0 header-title mb-4">Device 1</h4>
-                                        <div id="area-chart">
-                                            <Apexarea />
-                                        </div>
-                                    </CardBody>
-                                </Card>
-                            </Col>
-
-                            <Col xl="4">
-                                <Card>
-                                    <CardBody>
-                                        <h4 className="mt-0 header-title mb-4">Device 2</h4>
-                                        <div id="area-chart">
-                                            <Apexarea dynamo={true} />
-                                        </div>
-                                    </CardBody>
-                                </Card>
-                            </Col>
-
-                            <Col xl="4">
-                                <Card>
-                                    <CardBody>
-                                        <h4 className="mt-0 header-title mb-4">Device 3</h4>
-                                        <div id="area-chart">
-                                            <Apexarea />
-                                        </div>
-                                    </CardBody>
-                                </Card>
-                            </Col>
-
-                            {/* <Col xl="8">
-                                <Card>
-                                    <CardBody>
-                                        <h4 className="mt-0 header-title mb-4">Email Sent</h4>
-                                        <div id="column-chart" dir="ltr">
-                                            <Apexbar />
-                                        </div>
-                                    </CardBody>
-                                </Card>
-                            </Col> */}
                         </Row>
 
                         <Row>
-                            <Col xl="4">
-                                <Card>
-                                    <CardBody>
-                                        <h4 className="mt-0 header-title mb-4">Device 4</h4>
-                                        <div id="area-chart">
-                                            <Apexarea />
-                                        </div>
-                                    </CardBody>
-                                </Card>
-                            </Col>
-
-                            <Col xl="4">
-                                <Card>
-                                    <CardBody>
-                                        <h4 className="mt-0 header-title mb-4">Device 5</h4>
-                                        <div id="area-chart">
-                                            <Apexarea />
-                                        </div>
-                                    </CardBody>
-                                </Card>
-                            </Col>
-
-                            {/* <Col xl="8">
-                                <Card>
-                                    <CardBody>
-                                        <h4 className="mt-0 header-title mb-4">Email Sent</h4>
-                                        <div id="column-chart" dir="ltr">
-                                            <Apexbar />
-                                        </div>
-                                    </CardBody>
-                                </Card>
-                            </Col> */}
+                            { grid }
                         </Row>
 
-                        {/* <Row>
-                            <Col xl="4">
-                                <Card>
-                                    <CardBody>
-                                        <h4 className="mt-0 header-title">Earning</h4>
-                                        <div>
-                                            <div className="wid-earning">
-                                                <div className="row">
-                                                    <div className="col-md-6">
-                                                        <div>
-                                                            <h5 className="mt-0">$1,452</h5>
-                                                            <p className="text-muted mb-md-0">Weekly</p>
-                                                        </div>
-                                                    </div>
-                                                    <div className="col-md-5">
-                                                        <div id="chart1">
-                                                            <Apexchart1 />
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div className="wid-earning">
-                                                <div className="row">
-                                                    <div className="col-md-6">
-                                                        <div>
-                                                            <h5 className="mt-0">$4,150</h5>
-                                                            <p className="text-muted mb-md-0">Monthly</p>
-                                                        </div>
-                                                    </div>
-                                                    <div className="col-md-5">
-                                                        <div id="chart2">
-                                                            <Apexchart2 />
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div className="wid-earning">
-                                                <div className="row">
-                                                    <div className="col-md-6">
-                                                        <div>
-                                                            <h5 className="mt-0">$38,759</h5>
-                                                            <p className="text-muted mb-md-0">Yearly</p>
-
-                                                        </div>
-                                                    </div>
-                                                    <div className="col-md-5">
-                                                        <div id="chart3">
-                                                            <Apexchart3 />
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </CardBody>
-                                </Card>
-                            </Col>
-
-
-                            <Col xl="4">
-                                <Card className="messages recent-stock">
-                                    <CardBody>
-                                        <h4 className="mt-0 header-title">Recent Stock</h4>
-
-                                        <Nav tabs className="tab-wid recent-stock-widget nav-justified">
-                                            <NavItem>
-                                                <NavLink
-                                                    className={classnames({ active: this.state.activeTab === '1' })}
-                                                    onClick={() => { this.toggleStock('1'); }}
-                                                >
-                                                    <i className="dripicons-device-desktop h4 product-icon"></i>
-                                                    <p className="text-muted mb-0">Computer</p>
-                                                </NavLink>
-                                            </NavItem>
-                                            <NavItem>
-                                                <NavLink
-                                                    className={classnames({ active: this.state.activeTab === '2' })}
-                                                    onClick={() => { this.toggleStock('2'); }} >
-                                                    <i className="dripicons-monitor h4 product-icon"></i>
-                                                    <p className="text-muted mb-0">Laptop</p>
-                                                </NavLink>
-                                            </NavItem>
-                                        </Nav>
-
-
-                                        <TabContent activeTab={this.state.activeTab}>
-                                            <TabPane tabId="1">
-                                                <div className="text-center">
-                                                    <div id="radial-chart">
-                                                        <Apexradial />
-                                                    </div>
-                                                    <h5 className="font-18">Computer</h5>
-                                                    <p className="text-muted mb-0">Neque porro quisquam est</p>
-                                                </div>
-                                            </TabPane>
-                                            <TabPane tabId="2">
-                                                <div className="text-center">
-                                                    <div id="radial-chart-2">
-                                                        <Apexradial2 />
-
-                                                    </div>
-                                                    <h5 className="font-18">Laptop</h5>
-                                                    <p className="text-muted mb-0">Ut enim ad veniam quis</p>
-                                                </div>
-                                            </TabPane>
-                                        </TabContent>
-                                    </CardBody>
-                                </Card>
-                            </Col>
-                            <Col xl="4">
-                                <Card>
-                                    <CardBody>
-                                        <h4 className="mt-0 header-title">Social Source</h4>
-                                        <div id="multiple-radial-chart" className="social-source" dir="ltr">
-                                            <Apexsocial />
-                                        </div>
-                                    </CardBody>
-                                </Card>
-                            </Col>
-                        </Row> */}
-                        {/* <Row>
-                            <Col xl="8">
-                                <Card>
-                                    <CardBody>
-                                        <h4 className="mt-0 header-title mb-4">Latest Transactions</h4>
-                                        <div className="table-responsive">
-                                            <table className="table mb-0">
-                                                <tbody>
-                                                    <tr>
-                                                        <td style={{ width: "60px" }}>
-                                                            <img src={user2} alt="" className="thumb-sm rounded-circle" />
-                                                        </td>
-                                                        <td>David Wiley
-                                                            <p className="m-0 text-muted">On 02 Jun, 2019</p>
-                                                        </td>
-                                                        <td>Desktop</td>
-                                                        <td>
-                                                            <i className="mdi mdi-checkbox-blank-circle text-success mr-1"></i> Confirm
-                                                        </td>
-                                                        <td>
-                                                            $2105
-                                                            <p className="m-0 text-muted font-14">Amount</p>
-                                                        </td>
-                                                        <td>
-                                                            <div>
-                                                                <Link to="#" className="btn btn-primary btn-sm">Edit</Link>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>
-                                                            <img src={user3} alt="" className="thumb-sm rounded-circle" />
-                                                        </td>
-                                                        <td>Michael Gatlin
-                                                            <p className="m-0 text-muted">On 03 Jun, 2019</p>
-                                                        </td>
-                                                        <td>laptop</td>
-                                                        <td>
-                                                            <i className="mdi mdi-checkbox-blank-circle text-danger mr-1"></i> Payment expired
-                                                        </td>
-                                                        <td>
-                                                            $1825
-                                                            <p className="m-0 text-muted font-14">Amount</p>
-                                                        </td>
-                                                        <td>
-                                                            <div>
-                                                                <Link to="#" className="btn btn-primary btn-sm">Edit</Link>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>
-                                                            <img src={user4} alt="" className="thumb-sm rounded-circle" />
-                                                        </td>
-                                                        <td>Steve Dietrich
-                                                            <p className="m-0 text-muted">On 05 Jun, 2019</p>
-                                                        </td>
-                                                        <td>Tablet</td>
-                                                        <td>
-                                                            <i className="mdi mdi-checkbox-blank-circle text-warning mr-1"></i> Waiting payment
-                                                        </td>
-                                                        <td>
-                                                            $1460
-                                                            <p className="m-0 text-muted font-14">Amount</p>
-                                                        </td>
-                                                        <td>
-                                                            <div>
-                                                                <Link to="#" className="btn btn-primary btn-sm">Edit</Link>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>
-                                                            <img src={user5} alt="" className="thumb-sm rounded-circle" />
-                                                        </td>
-                                                        <td>James Harris
-                                                            <p className="m-0 text-muted">On 07 Jun, 2019</p>
-                                                        </td>
-                                                        <td>Mobile</td>
-                                                        <td>
-                                                            <i className="mdi mdi-checkbox-blank-circle text-success mr-1"></i> Confirm
-                                                        </td>
-                                                        <td>
-                                                            $1434
-                                                            <p className="m-0 text-muted font-14">Amount</p>
-                                                        </td>
-                                                        <td>
-                                                            <div>
-                                                                <Link to="#" className="btn btn-primary btn-sm">Edit</Link>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>
-                                                            <img src={user6} alt="" className="thumb-sm rounded-circle" />
-                                                        </td>
-                                                        <td>Clay Johnson
-                                                            <p className="m-0 text-muted">On 08 Jun, 2019</p>
-                                                        </td>
-                                                        <td>laptop</td>
-                                                        <td>
-                                                            <i className="mdi mdi-checkbox-blank-circle text-success mr-1"></i> Confirm
-                                                        </td>
-                                                        <td>
-                                                            $1759
-                                                            <p className="m-0 text-muted font-14">Amount</p>
-                                                        </td>
-                                                        <td>
-                                                            <div>
-                                                                <Link to="#" className="btn btn-primary btn-sm">Edit</Link>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </CardBody>
-                                </Card>
-                            </Col>
-                            <Col xl="4">
-                                <Card className="messages">
-                                    <CardBody>
-                                        <h4 className="mt-0 header-title mb-4">Latest Messages</h4>
-
-                                        <Nav tabs className="messages-tabs tab-wid nav-justified">
-                                            <NavItem>
-                                                <NavLink
-                                                    className={classnames({ active: this.state.activeother === '1' })}
-                                                    onClick={() => { this.toggleMessages('1'); }}
-                                                >
-                                                    <h5 className="mt-0 date">10</h5>
-                                                    <p className="text-muted mb-0">June</p>
-                                                </NavLink>
-                                            </NavItem>
-                                            <NavItem>
-                                                <NavLink
-                                                    className={classnames({ active: this.state.activeother === '2' })}
-                                                    onClick={() => { this.toggleMessages('2'); }} >
-                                                    <h5 className="mt-0 date">12</h5>
-                                                    <p className="text-muted mb-0">June</p>
-                                                </NavLink>
-                                            </NavItem>
-                                        </Nav>
-
-                                        <TabContent activeTab={this.state.activeother}>
-                                            <TabPane tabId="1">
-                                                <div className="p-2 mt-2">
-                                                    <ul className="list-unstyled latest-message-list mb-0">
-                                                        <li className="message-list-item">
-                                                            <Link to="#">
-                                                                <div className="media">
-                                                                    <img className="mr-3 thumb-md rounded-circle" src={user2} alt="" />
-                                                                    <div className="media-body">
-                                                                        <p className="float-right font-12 text-muted">Just Now</p>
-                                                                        <h6 className="mt-0">Mary Frye</h6>
-                                                                        <p className="text-muted mb-0">Hey! there I'm available...</p>
-                                                                    </div>
-                                                                </div>
-                                                            </Link>
-                                                        </li>
-                                                        <li className="message-list-item">
-                                                            <Link to="#">
-                                                                <div className="media">
-                                                                    <img className="mr-3 thumb-md rounded-circle" src={user3} alt="" />
-                                                                    <div className="media-body">
-                                                                        <p className="float-right font-12 text-muted">11:42am</p>
-                                                                        <h6 className="mt-0">David Smith</h6>
-                                                                        <p className="text-muted mb-0">I've finished it! See you so...</p>
-                                                                    </div>
-                                                                </div>
-                                                            </Link>
-                                                        </li>
-                                                        <li className="message-list-item">
-                                                            <Link to="#" >
-                                                                <div className="media">
-                                                                    <img className="mr-3 thumb-md rounded-circle" src={user4} alt="" />
-                                                                    <div className="media-body">
-                                                                        <p className="float-right font-12 text-muted">01:56pm</p>
-                                                                        <h6 className="mt-0">Troy Long</h6>
-                                                                        <p className="text-muted mb-0">This theme is awesome!</p>
-                                                                    </div>
-                                                                </div>
-                                                            </Link>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                                <div className="text-center">
-                                                    <Link to="#" className="btn btn-primary btn-sm">Load more</Link>
-                                                </div>
-                                            </TabPane>
-                                            <TabPane tabId="2">
-                                                <div className="p-2 mt-2">
-                                                    <ul className="list-unstyled latest-message-list mb-0">
-                                                        <li className="message-list-item">
-                                                            <Link to="#">
-                                                                <div className="media">
-                                                                    <img className="mr-3 thumb-md rounded-circle" src={user5} alt="" />
-                                                                    <div className="media-body">
-                                                                        <p className="float-right font-12 text-muted">09:42am</p>
-                                                                        <h6 className="mt-0">John Carle</h6>
-                                                                        <p className="text-muted mb-0">Hey! there I'm available...</p>
-                                                                    </div>
-                                                                </div>
-                                                            </Link>
-                                                        </li>
-                                                        <li className="message-list-item">
-                                                            <Link to="#">
-                                                                <div className="media">
-                                                                    <img className="mr-3 thumb-md rounded-circle" src={user6} alt="" />
-                                                                    <div className="media-body">
-                                                                        <p className="float-right font-12 text-muted">11:07am</p>
-                                                                        <h6 className="mt-0">Jerry Carter</h6>
-                                                                        <p className="text-muted mb-0">I've finished it! See you so...</p>
-                                                                    </div>
-                                                                </div>
-                                                            </Link>
-                                                        </li>
-                                                        <li className="message-list-item">
-                                                            <Link to="#">
-                                                                <div className="media">
-                                                                    <img className="mr-3 thumb-md rounded-circle" src={user7} alt="" />
-                                                                    <div className="media-body">
-                                                                        <p className="float-right font-12 text-muted">01:17pm</p>
-                                                                        <h6 className="mt-0">Shane Hill</h6>
-                                                                        <p className="text-muted mb-0">This theme is awesome!</p>
-                                                                    </div>
-                                                                </div>
-                                                            </Link>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                                <div className="text-center">
-                                                    <Link to="#" className="btn btn-primary btn-sm">Load more</Link>
-                                                </div>
-                                            </TabPane>
-                                        </TabContent>
-                                    </CardBody>
-                                </Card>
-                            </Col>
-                        </Row> */}
                     </div>
                 </div>
 

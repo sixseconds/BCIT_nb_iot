@@ -6,14 +6,10 @@ import routes from './routes';
 import './custom.css';
 import './App.scss';
 
-//Fake backend
-import fakeBackend from './helpers/fakeBackend';
+import axios from 'axios';
 
 // Get all Auth methods
 import { isUserAuthenticated } from './helpers/authUtils';
-
-// Activating fake backend
-fakeBackend();
 
 function withLayout(WrappedComponent) {
   // ...and returns another component...
@@ -30,6 +26,18 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {}
+  }
+
+  getData = () => {
+    axios.get('http://localhost:3010/getdata')
+      .then(d => console.log(d))
+      .catch(e => console.log(e))
+  }
+
+  componentDidMount () {
+    // setInterval(() => {
+    //   this.getData();
+    // }, 5000)
   }
 
   render() {
