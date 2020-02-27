@@ -20,32 +20,25 @@ export class PressureChart extends Component {
                     height: 500,
                     type: 'line',
                     id: "Pressure",
-                    foreColor: '#000000',
+                    foreColor: '#9f9ea4',
                     stacked: false,
                     toolbar: {
                         show: false
                     }
                 },
-                // Chart title
-                title: {
-                    text: 'Pressure',
-                    align: 'center'
-                },
-                // Chart theme
-                theme: {
-                    mode: 'light',
-                    palette: 'palette8',
+                // colors for series
+                colors: ['#4090cb', '#e74c5e', '#47bd9a'],
+                // datalabels
+                dataLabels: {
+                enabled: false
                 },
                 // Chart title
                 title: {
                     text: "Pressure",
                     align: 'center',
-                        style: {
-                            fontSize: '14px',
-                            fontWeight: 'bold',
-                            fontFamily: undefined,
-                            color: '#FFFFFF'
-                        },
+                    style: {
+                        fontSize: 16,
+                    }
                 },
                 markers: {
                     size: 5,
@@ -57,32 +50,38 @@ export class PressureChart extends Component {
                     title: 'Day'
                 },
                 // Y axis options
-                yaxis: {
-                    show: true,
-                    showAlways: true,
-                    seriesName: undefined,
-                    labels: {
-                        show: true,
-                        align: 'right',
-                        style: {
-                            fontSize: '12px',
-                        },
-                    },
-                    title: {
-                        text: 'Pressure (hPa)',
-                        style: {
-                            fontSize: '12px',
-                        },
-                    },
+                // yaxis: {
+                //     show: true,
+                //     showAlways: true,
+                //     seriesName: undefined,
+                //     labels: {
+                //         show: true,
+                //         align: 'right',
+                //         style: {
+                //             fontSize: '12px',
+                //         },
+                //     },
+                //     title: {
+                //         text: 'Pressure (hPa)',
+                //         style: {
+                //             fontSize: '12px',
+                //         },
+                //     },
 
+                // },
+                // tooltip
+                tooltip: {
+                    y: [{
+                    title: {
+                        formatter: function (val) {
+                        return val + " (hPa)"
+                        }
+                    }
+                    }],                
                 },
                 // grid styling
                 grid: {
-                    borderColor: '#FFFFFF', // line color
-                    show: true,                
-                    row: {
-                        colors: ['#A0A0A0'] // background color
-                    }
+                    borderColor: '#f1f1f1',
                 },
 
             },

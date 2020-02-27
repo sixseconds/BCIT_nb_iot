@@ -21,25 +21,24 @@ export class TemperatureChart extends Component {
                     height: 500,
                     type: 'line',
                     id: "Temperature",
-                    foreColor: '#000000',
+                    foreColor: '#9f9ea4',
                     stacked: false,
                     toolbar: {
                         show: false
+                    },
+                    zoom: {
+                        enabled: false
                     }
                 },
+                // series color
+                colors: ['#4090cb', '#e74c5e', '#47bd9a'],
                 // Chart title
                 title: {
                     text: "Temperature",
                     align: 'center',
                     style: {
                         fontSize: 16,
-                        
                     }
-                },
-                // Chart theme
-                theme: {
-                    mode: 'light',
-                    palette: 'palette8',
                 },
                 // Markers where data points align  
                 markers: {
@@ -53,32 +52,38 @@ export class TemperatureChart extends Component {
                     type: 'datetime',
                 },
                 // Options for the y axis
-                yaxis: {
-                    show: true,
-                    showAlways: true,
-                    seriesName: undefined,
-                    labels: {
-                        show: true,
-                        align: 'right',
-                        style: {
-                            fontSize: '12px',
-                        },
-                    },
-                    title: {
-                        text: 'Temperature (Celsius)',
-                        style: {
-                            fontSize: '12px',
-                        },
-                    },
+                // yaxis: {
+                //     show: true,
+                //     showAlways: true,
+                //     seriesName: undefined,
+                //     labels: {
+                //         show: true,
+                //         align: 'right',
+                //         style: {
+                //             fontSize: '12px',
+                //         },
+                //     },
+                //     title: {
+                //         text: 'Temperature (Celsius)',
+                //         style: {
+                //             fontSize: '12px',
+                //         },
+                //     },
+                // },
 
+                // tooltip
+                tooltip: {
+                    y: [{
+                    title: {
+                        formatter: function (val) {
+                        return val + " (Celsius)"
+                        }
+                    }
+                    }],                
                 },
                 // grid background style
                 grid: {
-                    borderColor: '#FFFFFF', // line color
-                    show: true,                
-                    row: {
-                        colors: ['#A0A0A0'] // background color
-                    }
+                    borderColor: '#f1f1f1',
                 },
             },
         };

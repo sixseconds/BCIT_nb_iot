@@ -36,78 +36,68 @@ export class AllTemperatureChart extends Component {
             ],
             // Chart styling
             options: {
-
                 chart: {
-                    height: 500,
+                    height: 380,
                     type: 'line',
-                    id: "allTemperature",
-                    foreColor: '#000000',
-                    stacked: false,
+                    foreColor: '#9f9ea4',
+                    zoom: {
+                        enabled: false
+                    },
                     toolbar: {
-                        show: false
+                        show: false,
                     }
                 },
-                // Chart title
-                title: {
-                    text: "Temperature From All Devices",
-                    align: 'center',
-                    style: {
-                        fontSize: 16,
-                        
-                    }
-                },
-                theme: {
-                    mode: 'light',
-                    palette: 'palette8',
-                },
-                legend: {
-                    showForSingleSeries: false,
-                    position: 'bottom',
-                    horizontalAlign: 'center',
-                    offsetY: 10,
-                    height: 50,
-                    onItemClick: {
-                        toggleDataSeries: true
-                    },
-                },
-                markers: {
-                    size: 5,
-                    style: 'inverted'
-                },
-                xaxis: {
-                    categories: ['Jan 12', 'Jan 13', 'Jan 14', 'Jan 15', 'Jan 16', 'Jan 17', 'Jan 18', 'Jan 19'],
-                    title: 'Day',
-                    
-                },
-                yaxis: {
-                    show: true,
-                    showAlways: true,
-                    seriesName: undefined,
-                    labels: {
-                        show: true,
-                        align: 'right',
-                        style: {
-                            color: 'black',
-                            fontSize: '12px',
-                        },
-                    },
-                    title: {
-                        text: 'Temperature (Celsius)',
-                        style: {
-                            color: 'blue',
-                            fontSize: '12px',
-                        },
-                    },
-                },
-                // grid styling
-                grid: {
-                    borderColor: '#FFFFFF', // line color
-                    show: true,                
-                    row: {
-                        colors: ['#A0A0A0'] // background color
-                    }
-                },
+                  colors: ['#4090cb', '#e74c5e', '#47bd9a', ],
+                  dataLabels: {
+                      enabled: false
+                  },
+                  //   stroke: {
+                  //     width: [3, 4, 3],
+                  //     curve: 'straight',
+                  //     dashArray: [0, 8, 5]
+                  //   },
+                  title: {
+                      text: 'Pressure From All Devices',
+                      align: 'left'
+                  },
+                  markers: {
+                      size: 0,
 
+                      hover: {
+                          sizeOffset: 6
+                      }
+                  },
+                  xaxis: {
+                      categories: ['01 Jan', '02 Jan', '03 Jan', '04 Jan', '05 Jan', '06 Jan', '07 Jan', '08 Jan', '09 Jan',
+                          '10 Jan', '11 Jan', '12 Jan'
+                      ],
+                  },
+                  tooltip: {
+                      enabled: true,
+                      shared: true,
+                      y: [{
+                          title: {
+                              formatter: function (val) {
+                                  return val;
+                              }
+                          }
+                      }, {
+                          title: {
+                              formatter: function (val) {
+                                  return val;
+                              }
+                          }
+                      }, {
+                          title: {
+                              formatter: function (val) {
+                                  return val;
+                              }
+                          }
+                      },]
+                  },
+                  grid: {
+                      borderColor: '#f1f1f1',
+                  }
             },
         };
     }

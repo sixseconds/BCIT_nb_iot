@@ -16,90 +16,84 @@ export class AllPressureChart extends Component {
                     name: 'Device1',
                     type: 'line',
                     data: '', // TODO: add data
-                }, {
+                }, 
+                {
                     // device 2 pressure
                     name: 'Device2',
                     type: 'line',
                     data: '', // TODO: add data
-                }, {
+                }, 
+                {
                     // device 2 pressure
                     name: 'Device3',
                     type: 'line',
                     data: '', // TODO: add data
-                }, {
-                    // as many for each device
                 },
             ],
             // Chart Styling
             options: {
-                chart: {
-                    height: 500,
-                    type: 'line',
-                    id: "allPressure",
-                    foreColor: '#000000',
-                    stacked: false,
-                    toolbar: {
-                        show: false
-                    }                    
-                },
-                title: {
-                    text: "Pressure From All Devices",
-                    align: 'left',
-                },
-                theme: {
-                    mode: 'light',
-                    palette: 'palette8',
-                },
-                legend: {
-                    showForSingleSeries: false,
-                    position: 'bottom',
-                    horizontalAlign: 'center',
-                    offsetY: 10,
-                    height: 50,
-                    onItemClick:{
-                        toggleDataSeries: true
-                    },
-                },
-                markers: {
-                    size: 5,
-                    style: 'inverted'
-                },
-                xaxis: {
-                    type: 'datetime',
-                    categories: ['Jan 12', 'Jan 13', 'Jan 14', 'Jan 15', 'Jan 16', 'Jan 17', 'Jan 18', 'Jan 19'],
-                    tickPlacement: 'on',
-                    
-                },
-                yaxis: {
-                    show: true,
-                    showAlways: true,
-                    seriesName: undefined,
-                    labels: {
-                        show: true,
-                        align: 'right',
-                        style: {
-                            color: 'black',
-                            fontSize: '12px',
-                        },
-                    },
-                    title: {
-                        text: 'Pressure (hPa)',
-                        style: {
-                            color: 'black',
-                            fontSize: '12px',
-                        },
-                    },
+              chart: {
+                      height: 380,
+                      type: 'line',
+                      foreColor: '#9f9ea4',
+                      zoom: {
+                          enabled: false
+                      },
+                      toolbar: {
+                          show: false,
+                      }
+                  },
+                  colors: ['#4090cb', '#e74c5e', '#47bd9a', ],
+                  dataLabels: {
+                      enabled: false
+                  },
+                  //   stroke: {
+                  //     width: [3, 4, 3],
+                  //     curve: 'straight',
+                  //     dashArray: [0, 8, 5]
+                  //   },
+                  title: {
+                      text: 'Pressure From All Devices',
+                      align: 'left'
+                  },
+                  markers: {
+                      size: 0,
 
-                },
-                // grid styling
-                grid: {
-                    borderColor: '#FFFFFF', // line color
-                    show: true,                
-                    row: {
-                        colors: ['#A0A0A0'] // background color
-                    }
-                },
-
+                      hover: {
+                          sizeOffset: 6
+                      }
+                  },
+                  xaxis: {
+                      categories: ['01 Jan', '02 Jan', '03 Jan', '04 Jan', '05 Jan', '06 Jan', '07 Jan', '08 Jan', '09 Jan',
+                          '10 Jan', '11 Jan', '12 Jan'
+                      ],
+                  },
+                  tooltip: {
+                      enabled: true,
+                      shared: true,
+                      y: [{
+                          title: {
+                              formatter: function (val) {
+                                  return val;
+                              }
+                          }
+                      }, {
+                          title: {
+                              formatter: function (val) {
+                                  return val;
+                              }
+                          }
+                      }, {
+                          title: {
+                              formatter: function (val) {
+                                  return val;
+                              }
+                          }
+                      },]
+                  },
+                  grid: {
+                      borderColor: '#f1f1f1',
+                  }
             },
         };
     }

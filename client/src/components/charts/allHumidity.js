@@ -15,97 +15,92 @@ export class AllHumidityChart extends Component {
                     // device 1 humidity 
                     name: 'Device1',
                     type: 'line',
-                    data: '', // TODO: add data
+                    data: [13, 19, 15, 11, 12, 14], // TODO: add data
                 },
                 {
                     // device 2 humidity
                     name: 'Device2',
                     type: 'line',
-                    data: '', // TODO: add data
+                    data: [16, 12, 11, 18, 15, 19], // TODO: add data
                 },
                 {
                     // device 3 humidity
                     name: 'Device3',
                     type: 'line',
-                    data: '', // TODO: add data
+                    data: [12, 15, 9, 8, 15, 16], // TODO: add data
                 },
                 {
-                    // as many for each device
+                    // device 4 humidity
+                    name: 'Device4',
+                    type: 'line',
+                    data: [5, 12, 14, 12, 15, 16], // TODO: add data
                 },
+                // add more devices as needed
             ],
             options: {
                 // Chart settings
-                chart: {
-                    height: 500,
-                    type: 'line',
-                    id: "allHumidity",
-                    foreColor: '#000000',
-                    stacked: false,
-                    toolbar: {
-                        show: false
-                    }                    
+              chart: {
+                height: 380,
+                type: 'line',
+                foreColor: '#9f9ea4',
+                zoom: {
+                  enabled: false
                 },
-                // Chart title
-                title: {
-                    text: "Humidity From All Devices",
-                    align: 'center',
-                },
-                // Toggle feature                
-                legend: {
-                    showForSingleSeries: false,
-                    position: 'bottom',
-                    horizontalAlign: 'center',
-                    offsetY: 10,
-                    height: 50,
-                    onItemClick: {
-                        toggleDataSeries: true
-                    },
-                },
-                theme: {
-                    mode: 'light',
-                    palette: 'palette8',
-                 },
-                markers: {
-                    size: 5,
-                    style: 'inverted'
-                },
-                // X axis options
-                xaxis: {
-                    categories: ['Jan 12', 'Jan 13', 'Jan 14', 'Jan 15', 'Jan 16', 'Jan 17', 'Jan 18', 'Jan 19'],
-                    type: 'datetime',
-                    
-                },
-                // Y axis options
-                yaxis: {
-                    show: true,
-                    showAlways: true,
-                    seriesName: undefined,
-                    labels: {
-                        show: true,
-                        align: 'right',
-                        style: {
-                            color: 'black',
-                            fontSize: '12px',
-                        },
-                    },
-                    title: {
-                        text: 'Humiduty (%)',
-                        style: {
-                            color: 'blue',
-                            fontSize: '12px',
-                        },
-                    },
-
-                },
-                // grid styling
-                grid: {
-                    borderColor: '#FFFFFF', // line color
-                    show: true,                
-                    row: {
-                        colors: ['#A0A0A0'] // background color
+                toolbar: {
+                  show: false,
+              }
+              },
+              colors: ['#4090cb', '#e74c5e', '#47bd9a', '#F9DC5C', '#F17300', '#802392', '#'],
+              dataLabels: {
+                enabled: false
+              },
+            //   stroke: {
+            //     width: [3, 4, 3],
+            //     curve: 'straight',
+            //     dashArray: [0, 8, 5]
+            //   },
+              title: {
+                text: 'Humidity From All Devices',
+                align: 'left'
+              },
+              markers: {
+                size: 0,
+          
+                hover: {
+                  sizeOffset: 6
+                }
+              },
+              xaxis: {
+                categories: ['01 Jan', '02 Jan', '03 Jan', '04 Jan', '05 Jan', '06 Jan', '07 Jan', '08 Jan', '09 Jan',
+                  '10 Jan', '11 Jan', '12 Jan'
+                ],
+              },
+              tooltip: {
+                enabled: true,
+                shared: true,
+                y: [{
+                  title: {
+                    formatter: function (val) {
+                      return val;
                     }
-                },
-
+                  }
+                }, {
+                  title: {
+                    formatter: function (val) {
+                      return val;
+                    }
+                  }
+                }, {
+                  title: {
+                    formatter: function (val) {
+                      return val;
+                    }
+                  }
+                }]
+              },
+              grid: {
+                borderColor: '#f1f1f1',
+              }
             },
         };
     }
@@ -113,7 +108,7 @@ export class AllHumidityChart extends Component {
         return ( 
             <div className = 'app' >
                 <div className = 'row' >
-                    <div className = 'mixed-chart' >
+                    <div className = 'line' >
                         <ReactApexChart 
                             options = {this.state.options}
                             series = {this.state.series}

@@ -33,6 +33,7 @@ class Pagesblank extends Component {
                                 </div>
                             </div>
                         </div>
+                        
                     </div>
                 </div>
             </React.Fragment>
