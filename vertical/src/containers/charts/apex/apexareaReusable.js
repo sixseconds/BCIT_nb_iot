@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import ReactApexChart from 'react-apexcharts';
 
-class Apexarea extends Component {
+class ApexareaReusable extends Component {
 
     constructor(props) {
         super(props);
@@ -22,9 +22,12 @@ class Apexarea extends Component {
                     curve: 'smooth',
                     width: 2
                 },
-                colors: ['#4090cb', '#003e6b'],
+                fill: {
+                    colors: [(this.props.color) ? this.props.color : '#4090cb']
+                },                  
+                colors: ['#4090cb'],
                 xaxis: {
-                    categories: [...Array(this.props.device.readings+1).keys()].shift(),
+                    categories: [...Array(this.props.data.length+1).keys()].shift(),
                 },
                 grid: {
                     yaxis: {
@@ -36,10 +39,7 @@ class Apexarea extends Component {
             },
                 series : [{
                     name: 'Temperature',
-                    data: this.props.device.tempData
-                }, {
-                    name: 'Pressure',
-                    data: this.props.device.pressureData
+                    data: this.props.data
                 }]
             
             }
@@ -74,4 +74,4 @@ class Apexarea extends Component {
     }
 }
 
-export default Apexarea;   
+export default ApexareaReusable;   
