@@ -81,6 +81,9 @@ import Iconsdripicons from './containers/MainContent/icons/icons-dripicons';
 
 import Mapsgoogle from './containers/MainContent/maps/maps-google';
 import Mapsvector from './containers/MainContent/maps/maps-vector';
+import Locations from './components/Layout/IoTLocations';
+import Parameters from './components/Parameters';
+import Devices from './components/Devices';
 
 const routes = [
 
@@ -90,6 +93,9 @@ const routes = [
     { path: '/register', component: Pagesregister, ispublic: true },
     { path: '/forget-password', component: ForgetPassword, ispublic: true },
     { path: '/reset-password', component: ResetPassword, ispublic: true },
+
+    { path: '/iot_parameters', component: Parameters, ispublic: true },
+    { path: '/iot_devices', component: Devices, ispublic: true },
 
     { path: '/charts-apex', component: ChartApex },
     { path: '/charts-echart', component: ChartEchart },
@@ -101,6 +107,7 @@ const routes = [
     { path: '/email-inbox', component: EmailInbox },
     { path: '/email-read', component: EmailRead },
     { path: '/email-compose', component: EmailCompose },
+    { path: '/iot_locations', component: Locations },
 
     { path: '/calendar', component: Calendar },
 

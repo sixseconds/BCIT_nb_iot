@@ -65,9 +65,9 @@ class Topbar extends Component {
                             <span className="logo-light">
                                 {this.props.is_light ?  <img src={logoLight} alt="" height="16" /> :  <img src={logoDark} alt="" height="16" /> }
                             </span>
-                            <span className="logo-sm">
+                            {/* <span className="logo-sm">
                                 <img src={logoSmall} alt="" height="22" />
-                            </span>
+                            </span> */}
                         </Link>
                     </div>
 
@@ -82,7 +82,7 @@ class Topbar extends Component {
                                 </form>
                             </li>
 
-                            <LanguageMenu />
+                            {/* <LanguageMenu /> */}
 
                             <li className="dropdown notification-list list-inline-item d-none d-md-inline-block mr-1">
                                 <Link onClick={this.toggleFullscreen} className="nav-link waves-effect" to="#" id="btn-fullscreen">
@@ -91,7 +91,7 @@ class Topbar extends Component {
                             </li>
 
                             <NotificationMenu />
-                            <ProfileMenu />
+                            {/* <ProfileMenu /> */}
                         </ul>
 
                         <ul className="list-inline menu-left mb-0">
@@ -102,19 +102,29 @@ class Topbar extends Component {
                             </li>
  
                             <li className="d-none d-sm-block">
-                            <Dropdown isOpen={this.state.create_menu} toggle={this.toggleCreate} className="pt-3 d-inline-block">
-                                <DropdownToggle className="btn btn-light" caret tag="a">
-                                    Create {' '}{' '}{' '}
-                                </DropdownToggle>
-                                <DropdownMenu >
-                                    <DropdownItem tag="a" href="#">Action</DropdownItem>
-                                    <DropdownItem tag="a" href="#">Another action</DropdownItem>
-                                    <DropdownItem tag="a" href="#">Something else here</DropdownItem>
-                                    <div className="dropdown-divider"></div>
-                                    <DropdownItem tag="a" href="#">Separated link</DropdownItem>
-                                </DropdownMenu>
-                            </Dropdown>
-                        </li>
+                                <div style={{
+                                    height: 70,
+                                    display: 'flex',
+                                    padding: 15,
+                                    alignItems: 'center'
+                                }}>
+                                    <h4 style={{ color: 'white', fontFamily: "Rubik", fontWeight: 200 }}>
+                                        BCIT IoT Dashboard
+                                    </h4>
+                                </div>
+                                {/* <Dropdown isOpen={this.state.create_menu} toggle={this.toggleCreate} className="pt-3 d-inline-block">
+                                    <DropdownToggle className="btn btn-light" caret tag="a">
+                                        Create {' '}{' '}{' '}
+                                    </DropdownToggle>
+                                    <DropdownMenu >
+                                        <DropdownItem tag="a" href="#">Action</DropdownItem>
+                                        <DropdownItem tag="a" href="#">Another action</DropdownItem>
+                                        <DropdownItem tag="a" href="#">Something else here</DropdownItem>
+                                        <div className="dropdown-divider"></div>
+                                        <DropdownItem tag="a" href="#">Separated link</DropdownItem>
+                                    </DropdownMenu>
+                                </Dropdown> */}
+                            </li>
                         </ul>
                     </nav>
                 </div>
