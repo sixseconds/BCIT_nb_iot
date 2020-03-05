@@ -1,0 +1,9 @@
+.devices_back_button {
+    font-size: 30px;
+    transition: all 0.2s;
+}
+
+.devices_back_button:hover {
+    color: lightblue;
+    font-size: 40px;
+}
