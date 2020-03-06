@@ -51,7 +51,7 @@ class Apexchart1 extends Component {
 
     render() {
         const apexBarChartData = [{
-            data: [24, 66, 42, 88, 62, 24, 45, 12, 36, 10]
+            data: this.props.data
           }];
 
         return (

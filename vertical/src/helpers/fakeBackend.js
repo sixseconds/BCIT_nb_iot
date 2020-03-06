@@ -6,6 +6,9 @@ let users = [
 ];
 
 const fakeBackend = () => {
+
+  axios.onPost
+
   // This sets the mock adapter on the default instance
   var mock = new MockAdapter(axios);
 
