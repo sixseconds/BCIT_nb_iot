@@ -14,31 +14,28 @@ export class SingleDeviceAllSensors extends Component {
                 {
                     // device temperature sensor 
                     name: 'DeviceTemp',
-                    type: 'line',
-                    data: '', // TODO: add data 
+                    type: 'area',
+                    data: this.props.device.tempData
                 },
                 {
                     // device humidity sensor
                     name: 'DeviceHumidity',
-                    type: 'line',
-                    data: '', // TODO: add data
+                    type: 'area',
+                    data: this.props.device.humidityData
                 },
                 {
                     // device pressure sensor
                     name: 'DevicePressure',
-                    type: 'line',
-                    data: '', // TODO: add data
-                },
-                {
-                    // any additional sensors
-                },
+                    type: 'area',
+                    data: this.props.device.pressureData
+                }
             ],
             options: {
                 chart: {
                     height: 400,
-                    type: 'line',
+                    type: 'area',
                     id: "allSensors",
-                    foreColor: '#000000',
+                    foreColor: '#9f9ea4',
                     stacked: false,
                     toolbar: {
                         show: false
@@ -47,7 +44,7 @@ export class SingleDeviceAllSensors extends Component {
                 // Chart title
                 title: {
                     text: "Temperature, Humidity & Pressure Readings",
-                    align: 'center',
+                    align: 'left',
                 },
                 // Toggle feature                
                 legend: {
@@ -58,45 +55,81 @@ export class SingleDeviceAllSensors extends Component {
                     height: 50,
                     onItemClick: {
                         toggleDataSeries: true
-                    },
-                // chart theme    
+                    }, 
                 },
-                theme: {
-                    mode: 'light',
-                    palette: 'palette8',
+                dataLabels: {
+                    enabled: false
                 },
-                // marker options
-                markers: {
-                    size: 5,
-                    style: 'inverted'
+                toolTip: {
+                    enabled: false, 
+                    fixed: {
+                        enabled: true,
+                        position: 'topLeft'
+                    }
+                    
                 },
                 // X axis options
-                // TODO: make x axis datalabels real time
                 xaxis: {
-                    categories: ['Jan 12', 'Jan 13', 'Jan 14', 'Jan 15', 'Jan 16', 'Jan 17', 'Jan 18', 'Jan 19']                     
+                    categories: [...Array(this.props.device.readings + 1).keys()].shift(),
                 },
                 // Y axis options
-                yaxis: {
-                    show: true,
-                    showAlways: true,
-                    seriesName: undefined,
-                    labels: {
-                        show: true,
-                        align: 'right',
-                        style: {
-                            color: 'black',
-                            fontSize: '12px',
+                yaxis: [
+                    {
+                        axisBorder: {
+                            show: true,
+                            color: '#008ffb',
                         },
-                    },
-                    title: {
-                        text: 'Humiduty (%)',
-                        style: {
-                            color: 'blue',
-                            fontSize: '12px',
+                        labels: {
+                            style: {
+                                color: '#008ffb'
+                            },
                         },
+                        title: {
+                            text: 'Temperature (C°)',
+                            style: {
+                                color: '#008ffb',
+                            }
+                        }
                     },
-
-                },
+                    {
+                        seriesName: 'DeviceHumidity',
+                        opposite: true,
+                        axisBorder: {
+                            show: true,
+                            color: '#00e396'
+                        },
+                        labels: {
+                            style: {
+                                colors: '#00e396'
+                            },
+                        },
+                        title: {
+                            text: 'Humidity (%)',
+                            style: {
+                                color: '#00e396',
+                            }
+                        }
+                    },
+                    {
+                        seriesName: 'DevicePressure',
+                        opposite: true,
+                        axisBorder: {
+                            show: true,
+                            color: '#feb019',
+                        },
+                        labels: {
+                            style: {
+                                colors: '#feb019',
+                            }
+                        },
+                        title: {
+                            text: 'Pressure (hPa)',
+                            style: {
+                                color: '#feb019',
+                            }
+                        }
+                    },
+                ],
                 // grid options
                 grid: {
                     borderColor: '#FFFFFF', // line color
@@ -108,21 +141,33 @@ export class SingleDeviceAllSensors extends Component {
 
             },
         };
+
+        this.fetchIcons = this.fetchIcons.bind(this);
     }
+
+    fetchIcons() {
+        fetch('http://localhost:3000/getdata')
+            .then(response => response.json())
+            .then(data => {
+                console.log(data)
+                this.setState({
+                    data: [data.temp]
+                })
+            })
+    }
+
+    componentDidMount() {
+        this.fetchIcons();
+    }
+
     render() {
+
+        let d = (this.props.dynamo && this.state.data) ? this.state.data : this.state.series;
+
         return ( 
-            <div className = 'app' >
-                <div className = 'row' >
-                    <div className = 'mixed-chart' >
-                        <ReactApexChart 
-                            options = {this.state.options}
-                            series = {this.state.series}
-                            type = 'line'
-                            width = '500' 
-                        />
-                    </div> 
-                </div> 
-            </div>
+            <React.Fragment>
+                <ReactApexChart options={this.state.options} series={d} type="area" width="100%" height="299" />
+            </React.Fragment>
         );
     }
 }

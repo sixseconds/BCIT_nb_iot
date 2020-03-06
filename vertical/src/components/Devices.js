@@ -8,8 +8,12 @@ import { Link } from 'react-router-dom';
 import './devices.css';
 
 //Charts
+import SingleDeviceAllSensors from '../components/charts/singleDeviceAllSensors';
 import Apexarea from '../containers/charts/apex/apexarea';
 import ApexareaReusable from '../containers/charts/apex/apexareaReusable';
+import HumidityChart from '../components/charts/humidityChart';
+import PressureChart from '../components/charts/pressureChart';
+import TempteratureChart from '../components/charts/tempChart';
 
 const dummyData = {
     allDevices: [
@@ -124,7 +128,7 @@ class Devices extends Component {
                                             onClick={() => { this.selectDevice(index) }}
                                             className="mt-0 header-title mb-4">{device.name}</h4>
                                         <div id="area-chart">
-                                            <Apexarea device={device} />
+                                            <SingleDeviceAllSensors device={device} />
                                         </div>
                                     </CardBody>
                                 </Card>

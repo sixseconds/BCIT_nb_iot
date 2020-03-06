@@ -45,7 +45,7 @@ class Apexarea extends Component {
             }
 
         this.fetchIcons = this.fetchIcons.bind(this);
-        }
+    }
 
     fetchIcons () {
         fetch('http://localhost:3000/getdata')

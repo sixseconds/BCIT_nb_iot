@@ -37,9 +37,6 @@ export class HumidityChart extends Component {
                 title: {
                     text: "Humidity (%)",
                     align: 'center',
-                    style: {
-                        fontSize: 16,
-                    }
                 },
                 // markers
                 markers: {
