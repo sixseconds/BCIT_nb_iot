@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import LanguageMenu from './Menus/languageMenu';
 import { Link } from 'react-router-dom';
 import { withRouter } from "react-router";
 import NotificationMenu from './Menus/notificationMenu';
@@ -65,9 +64,6 @@ class Topbar extends Component {
                             <span className="logo-light">
                                 {this.props.is_light ?  <img src={logoLight} alt="" height="16" /> :  <img src={logoDark} alt="" height="16" /> }
                             </span>
-                            {/* <span className="logo-sm">
-                                <img src={logoSmall} alt="" height="22" />
-                            </span> */}
                         </Link>
                     </div>
 
@@ -82,8 +78,6 @@ class Topbar extends Component {
                                 </form>
                             </li>
 
-                            {/* <LanguageMenu /> */}
-
                             <li className="dropdown notification-list list-inline-item d-none d-md-inline-block mr-1">
                                 <Link onClick={this.toggleFullscreen} className="nav-link waves-effect" to="#" id="btn-fullscreen">
                                     <i className="ion ion-md-qr-scanner noti-icon"></i>
@@ -91,7 +85,6 @@ class Topbar extends Component {
                             </li>
 
                             <NotificationMenu />
-                            {/* <ProfileMenu /> */}
                         </ul>
 
                         <ul className="list-inline menu-left mb-0">
@@ -112,18 +105,6 @@ class Topbar extends Component {
                                         BCIT IoT Dashboard
                                     </h4>
                                 </div>
-                                {/* <Dropdown isOpen={this.state.create_menu} toggle={this.toggleCreate} className="pt-3 d-inline-block">
-                                    <DropdownToggle className="btn btn-light" caret tag="a">
-                                        Create {' '}{' '}{' '}
-                                    </DropdownToggle>
-                                    <DropdownMenu >
-                                        <DropdownItem tag="a" href="#">Action</DropdownItem>
-                                        <DropdownItem tag="a" href="#">Another action</DropdownItem>
-                                        <DropdownItem tag="a" href="#">Something else here</DropdownItem>
-                                        <div className="dropdown-divider"></div>
-                                        <DropdownItem tag="a" href="#">Separated link</DropdownItem>
-                                    </DropdownMenu>
-                                </Dropdown> */}
                             </li>
                         </ul>
                     </nav>
