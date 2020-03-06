@@ -1,77 +1,80 @@
 var express = require('express');
 var AWS = require('aws-sdk');
 var cors = require('cors');
+var bodyParser = require('body-parser');
 
-
-
+//initial config
+const PORT = 3010;
 var app = express();
 
-
+//use cors
 app.use(cors());
 
-// AWS.config.update({region: 'us-west-2'});
+//body parser for json
+app.use(bodyParser.json());
 
-// var ddb = new AWS.DynamoDB.DocumentClient();
-
-// console.log(ddb);
-
-// var params = {
-//     TableName: 'bcit-iot',
-//     Key:{
-//         HashKey: "1"
-//     }
-// };
-  
-// ddb.get(params, function(err, data) {
-//     if (err) {
-//         console.log("Error", err, err.stack);
-//     } else {
-//         console.log("Success", data);
-//     }
-// });
-
+//AWS
 var AWS = require("aws-sdk");
-
 AWS.config.update({
   region: "us-west-2"});
-
 var docClient = new AWS.DynamoDB.DocumentClient();
 
-var table = "bcit-iot";
-
-// var params = {
-//     TableName:table,
-//     Key:{
-//         "id": Date.now()
-//     }
-// };
-
-var params = {
-    TableName: "bcit-iot",
-    ProjectionExpression: "#id, device, humidity, #temp, pressure",
-    FilterExpression: "#id between :start_yr and :end_yr",
-    ExpressionAttributeNames: {
-        "#id": "id",
-        "#temp": "temp"
-    },
-    ExpressionAttributeValues: {
-         ":start_yr": (Date.now() - 100000).toString(),
-         ":end_yr": (Date.now()).toString()
-    }
-}
-
-
-app.get('/getdata', (req, res) => {
-    docClient.scan(params, function(err, data) {
-        if (err) {
-            console.error("Unable to get item. Error JSON:", JSON.stringify(err, null, 2));
+app.post('/aws_query_devices', (req, res) => {
+    // check if required parameters in request body exist
+    if (req.body.parameters && 
+        req.body.start_timestamp && 
+        req.body.end_timestamp &&
+        req.body.devices) {
+            var response_arr = [];
+            
+            for (let i = 0; i < req.body.devices.length; i++) {
+                let ProjectionExpression = req.body.parameters.join(", ");
+                
+                if(req.body.parameters.indexOf("temp") != -1)
+                    ProjectionExpression = ProjectionExpression.replace("temp", "#temp");
+                
+                let params = {
+                    TableName: "nb_iot",
+                    ProjectionExpression: ProjectionExpression,
+                    KeyConditionExpression: "deviceID = :device AND tsAWS BETWEEN :tsStart AND :tsEnd",
+                    ExpressionAttributeValues: {
+                        ":device": req.body.devices[i],
+                        ":tsStart": req.body.start_timestamp,
+                        ":tsEnd": req.body.end_timestamp
+                    }
+                }
+                
+                if(req.body.parameters.indexOf("temp") != -1)
+                    params.ExpressionAttributeNames = {
+                        "#temp": "temp"
+                    }
+                
+                docClient.query(params, function(err, data) {
+                    if (err) {
+                        console.error("Unable to query. Error:", JSON.stringify(err, null, 2));
+                    } else {
+                        console.log("Query succeeded.");
+                        let dataObj = {
+                            deviceID: req.body.devices[i],
+                        }
+                        req.body.parameters.forEach(p => {
+                            dataObj[p] = data.Items.map(item => item[p])
+                        });
+                        response_arr.push(dataObj)
+                        
+                        if (response_arr.length == req.body.devices.length)
+                            res.json(response_arr)
+                    }
+                });
+                
+            }
+            
         } else {
-            console.log("got item:", JSON.stringify(data, null, 2));
-            res.json(data.Item);
+            res.status(400);
+            res.send('Bad request. Please change your request to include the right fields in the body.');
         }
-    });
 })
 
-app.listen(3010);
+app.listen(PORT, () => console.log(`listening on port ${PORT}`));
 
 
