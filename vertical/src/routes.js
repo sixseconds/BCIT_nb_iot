@@ -1,4 +1,6 @@
 import Dashboard from './containers/MainContent/dashboard/dashboard';
+import LocationsComponent from './components/Layout/LocationComponent';
+import Floor from "./components/Layout/floors";
 
 import ChartApex from './containers/MainContent/charts/charts-apex';
 import ChartEchart from './containers/MainContent/charts/charts-echart';
@@ -81,7 +83,6 @@ import Iconsdripicons from './containers/MainContent/icons/icons-dripicons';
 
 import Mapsgoogle from './containers/MainContent/maps/maps-google';
 import Mapsvector from './containers/MainContent/maps/maps-vector';
-import Locations from './components/Layout/IoTLocations';
 import Parameters from './components/Parameters';
 import Devices from './components/Devices';
 
@@ -93,6 +94,8 @@ const routes = [
     { path: '/register', component: Pagesregister, ispublic: true },
     { path: '/forget-password', component: ForgetPassword, ispublic: true },
     { path: '/reset-password', component: ResetPassword, ispublic: true },
+    { path: '/iot_locations', component: LocationsComponent },
+    { path: '/floors', component: Floor },
 
     { path: '/iot_parameters', component: Parameters, ispublic: true },
     { path: '/iot_devices', component: Devices, ispublic: true },
@@ -107,7 +110,6 @@ const routes = [
     { path: '/email-inbox', component: EmailInbox },
     { path: '/email-read', component: EmailRead },
     { path: '/email-compose', component: EmailCompose },
-    { path: '/iot_locations', component: Locations },
 
     { path: '/calendar', component: Calendar },
 
