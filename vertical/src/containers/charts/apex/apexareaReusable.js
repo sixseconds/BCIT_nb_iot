@@ -1,6 +1,14 @@
 import React, { Component } from 'react';
 import ReactApexChart from 'react-apexcharts';
 
+const getTimeTextFromUnixTime = (unixTime) => {
+    const dateObj = new Date();
+    
+    dateObj.setTime(unixTime);
+    
+    // return something like 'Mar 03, 08:01'
+    return dateObj.toDateString().substr(4,dateObj.toDateString().length - 9) + " " + dateObj.toTimeString().substr(0,5)
+}
 class ApexareaReusable extends Component {
 
     constructor(props) {
@@ -27,7 +35,8 @@ class ApexareaReusable extends Component {
                 },                  
                 colors: ['#4090cb'],
                 xaxis: {
-                    categories: [...Array(this.props.data.length+1).keys()].shift(),
+                    type: "text",
+                    tickPlacement: 'on'
                 },
                 grid: {
                     yaxis: {
@@ -37,10 +46,15 @@ class ApexareaReusable extends Component {
                     }
                 },
             },
-                series : [{
-                    name: 'Temperature',
-                    data: this.props.data
-                }]
+            series: [{
+                name: this.props.name,
+                data: this.props.timestamps.map((ts, i) => {
+                        return {
+                            x: getTimeTextFromUnixTime(ts*1000),
+                            y: this.props.data[i]
+                        }
+                    })
+            }]
             
             }
 
@@ -51,7 +65,6 @@ class ApexareaReusable extends Component {
         fetch('http://localhost:3000/getdata')
             .then(response => response.json())
             .then(data => {
-                console.log(data)
                 this.setState({
                     data: [data.temp]
                 })
