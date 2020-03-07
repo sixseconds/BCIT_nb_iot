@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
-import { Row, Col, Card, CardBody, TabContent, TabPane, Nav, NavItem, NavLink } from 'reactstrap';
+import { Row, Col, Card, CardBody, TabContent, TabPane, Button, NavItem, NavLink } from 'reactstrap';
 import { activateAuthLayout } from '../store/actions';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Settingmenu from '../containers/MainContent/Subpages/Settingmenu';
 import { Link } from 'react-router-dom';
 import './devices.css';
+import { DateTimePicker } from '@progress/kendo-react-dateinputs';
+
+import axios from 'axios';
 
 //Charts
 import SingleDeviceAllSensors from '../components/charts/singleDeviceAllSensors';
@@ -15,72 +18,46 @@ import HumidityChart from '../components/charts/humidityChart';
 import PressureChart from '../components/charts/pressureChart';
 import TempteratureChart from '../components/charts/tempChart';
 
-const dummyData = {
-    allDevices: [
-      {
-        id: 0,
-        name: "iot_device_0",
-        temp: "13.4",
-        readings: 8,
-        tempData: [14, 12, 18, 12, 12, 11, 16, 12],
-        humidity: "20%",
-        humidityData: [21, 20, 20, 21, 20, 20, 20, 20],
-        pressure: "98Kpa",
-        pressureData: [98, 97, 98, 99, 100, 99, 99, 99],
-        location: "floor1.png",
-        coords: ["15%", "65%"]
-      },
-      {
-        id: 1,
-        name: "iot_device_1",
-        temp: "14.2",
-        readings: 8,
-        tempData: [14, 12, 12, 12, 13, 11, 14, 14],
-        humidity: "20%",
-        humidityData: [20, 20, 22, 21, 20, 19, 20, 20],
-        pressure: "98Kpa",
-        pressureData: [99, 100, 99, 99, 99, 98, 97, 98],
-        location: "floor1.png",
-        coords: ["55%", "35%"]
-      },
-      {
-        id: 2,
-        name: "iot_device_2",
-        temp: "13.0",
-        readings: 8,
-        tempData: [14, 12, 12, 11, 16, 12, 13, 13],
-        humidity: "23%",
-        humidityData: [20, 20, 20, 22, 20, 21, 21, 23],
-        pressure: "98Kpa",
-        pressureData: [98, 97, 98, 99, 100, 99, 99, 99],
-        location: "floor2.png",
-        coords: ["25%", "35%"]
-      }
-    ],
-    floors: ["floor1.png", "floor1m.png", "floor2.png"]
-  }
+const ALLOWED_DISPLAY_PARAMS = [
+    "Temperature",
+    "Humidity",
+    "Pressure"
+]
 
 class Devices extends Component {
 
     constructor(props) {
         super(props);
-        this.state = { activeTab: '1', activeother: '1', startDate: new Date(), selected: null }
+        this.state = { 
+            activeTab: '1', 
+            activeother: '1', 
+            startDate: new Date(), 
+            selected: null, 
+            devices: ["AWS1", "AWS2", "AWS3", "AWS4", "AWS5"],
+            displayParameters: ["Temperature", "Humidity"]
+        }
+        
         this.toggleStock = this.toggleStock.bind(this);
         this.toggleMessages = this.toggleMessages.bind(this);
         this.selectDevice = this.selectDevice.bind(this);
         this.back = this.back.bind(this);
+        this.toggleDisplayParameter = this.toggleDisplayParameter.bind(this);
+    }
+    
+    getData () {
+        axios.post('http://localhost:3010/aws_query_devices', {
+            parameters: ["temp", "pressure", "humidity", "tsAWS"],
+            start_timestamp: Math.floor((Date.now() / 1000) - 1500000),
+            end_timestamp: Math.floor(Date.now() / 1000),
+            devices: this.state.devices
+        })
+        .then(d => this.setState({ data: d.data }))
+        .catch(e => console.log(e))
     }
 
     componentDidMount() {
+        this.getData();
         this.props.activateAuthLayout();
-        // document.body.classList = "";
-        // if (this.props.location.pathname === '/layout-light') {
-        //     document.body.classList.add('left-side-menu-light');
-        // }
-        // else if (this.props.location.pathname === '/layout-collapsed') {
-        //     document.body.classList.toggle('enlarged');
-        // }
-        // else { }
     }
 
     toggleStock(tab) {
@@ -100,7 +77,6 @@ class Devices extends Component {
     }
 
     selectDevice (i) {
-        console.log(i)
         this.setState({ selected: i })
     }
 
@@ -108,39 +84,60 @@ class Devices extends Component {
         this.setState({ selected: null });
     }
 
+    toggleDisplayParameter (param) {
+        const currentParams = this.state.displayParameters;
+        const i = currentParams.indexOf(param);
+        const j = currentParams.indexOf(null);
+        
+        if (i > -1) {
+            currentParams[i] = null;
+        } else if (j > -1) {
+            currentParams[j] = param;
+        } else {
+            currentParams[0] = param;
+        }
+        
+        this.setState({ displayParameters: currentParams })
+    }
+    
     render() {
 
         let content; 
-        let backButton = ''; 
+        let backButton = '';
         
-        content = (
-            <Row style={{ display: 'flex', justifyContent: 'center' }}>
-                {
-                    dummyData.allDevices.map((device, index) => {
-                        return (
-                            <Col key={index} xl="4">
-                                <Card>
-                                    <CardBody>
-                                        <h4 
-                                            style={{
-                                                cursor: 'pointer'
-                                            }}
-                                            onClick={() => { this.selectDevice(index) }}
-                                            className="mt-0 header-title mb-4">{device.name}</h4>
-                                        <div id="area-chart">
-                                            <SingleDeviceAllSensors device={device} />
-                                        </div>
-                                    </CardBody>
-                                </Card>
-                            </Col>
-                        )
-                    })
-                }
-            </Row>
-        ) 
+        if (this.state.data) {
+            content = (
+                <Row style={{ display: 'flex', justifyContent: 'center' }}>
+                    {
+                        this.state.data.map((device, index) => {
+                            return (
+                                <Col key={index} xl="4">
+                                    <Card>
+                                        <CardBody>
+                                            <h4 
+                                                style={{
+                                                    cursor: 'pointer'
+                                                }}
+                                                onClick={() => { this.selectDevice(index) }}
+                                                className="mt-0 header-title mb-4">{device.deviceID}</h4>
+                                            <div id="area-chart">
+                                                <Apexarea 
+                                                device={device} 
+                                                left={this.state.displayParameters[0]} 
+                                                right={this.state.displayParameters[1]} />
+                                            </div>
+                                        </CardBody>
+                                    </Card>
+                                </Col>
+                            )
+                        })
+                    }
+                </Row>
+            ) 
+        }
 
         if (this.state.selected != null) {
-            let device = dummyData.allDevices[this.state.selected];
+            let device = this.state.data[this.state.selected];
 
             backButton = (
                 <div className="col-sm-1">
@@ -155,7 +152,11 @@ class Devices extends Component {
                             <CardBody>
                                 <h4 className="mt-0 header-title mb-4">Tempterature readings</h4>
                                 <div id="area-chart">
-                                    <ApexareaReusable data={device.tempData} color={'#32a852'} />
+                                    <ApexareaReusable 
+                                        data={device.temp} 
+                                        timestamps={device.tsAWS} 
+                                        color={'#32a852'}
+                                        name="Temperature" />
                                 </div>
                             </CardBody>
                         </Card>
@@ -165,7 +166,11 @@ class Devices extends Component {
                             <CardBody>
                                 <h4 className="mt-0 header-title mb-4">Pressure readings</h4>
                                 <div id="area-chart">
-                                    <ApexareaReusable data={device.pressureData} color={'#327da8'} />
+                                    <ApexareaReusable 
+                                        data={device.pressure} 
+                                        timestamps={device.tsAWS} 
+                                        color={'#327da8'}
+                                        name="Pressure" />
                                 </div>
                             </CardBody>
                         </Card>
@@ -175,7 +180,11 @@ class Devices extends Component {
                             <CardBody>
                                 <h4 className="mt-0 header-title mb-4">Humidity readings</h4>
                                 <div id="area-chart">
-                                    <ApexareaReusable data={device.humidityData} color={'#263257'} />
+                                    <ApexareaReusable 
+                                        data={device.humidity} 
+                                        timestamps={device.tsAWS} 
+                                        color={'#263257'}
+                                        name="Humidity" />
                                 </div>
                             </CardBody>
                         </Card>
@@ -190,21 +199,92 @@ class Devices extends Component {
                 <div className="content">
                     <div className="container-fluid">
                         <div className="page-title-box">
-                            <div className="row align-items-center">
+                            <div style={{ 
+                                display: 'flex', 
+                                justifyContent: 'space-between', 
+                                alignItems: 'center' 
+                                }}>
                                 { backButton }
-                                <div className="col-sm-10">
+                                <div>
                                     <h4 className="page-title">Devices</h4>
                                     <ol className="breadcrumb">
                                         <li className="breadcrumb-item active">
                                             {
-                                                (this.state.selected != null) ? dummyData.allDevices[this.state.selected].name : 'All devices'
+                                                (this.state.selected != null) ? this.state.data[this.state.selected].deviceID : 'All devices'
                                             }
                                         </li>
                                     </ol>
                                 </div>
-                                <div className={(this.state.selected != null) ? "col-sm-1" : "col-sm-2"}>
+                                <div>
+                                    <div style={{ 
+                                        display: 'flex', 
+                                        justifyContent: 'center', 
+                                        alignItems: 'center'
+                                         }}>
+                                        <label style={{ margin: 5 }} >From:</label>
+                                        <input 
+                                            style={{ margin: 5 }}
+                                            className="form-control" 
+                                            type="search" 
+                                            placeholder="March 1 @ 18:00" 
+                                            id="example-search-input" 
+                                            />
+                                        <label style={{ margin: 5 }} >To:</label>
+                                        <input 
+                                            style={{ margin: 5 }}
+                                            className="form-control" 
+                                            type="search" 
+                                            placeholder="March 5 @ 10:00" 
+                                            id="example-search-input" 
+                                            />
+                                            
+                                        <Button 
+                                            style={{ margin: 5, minWidth: 100 }}
+                                            className="btn-icon" 
+                                            color="primary"> 
+                                            <span className="btn-icon-label">
+                                                <i className="mdi mdi-bullseye-arrow mr-2"></i>
+                                            </span> 
+                                            Go
+                                        </Button>
+                                    </div>
+                                </div>
+                                <div>
                                     <div className="float-right d-none d-md-block">
-                                        <Settingmenu />
+                                        <Row style={{
+                                            display: 'flex',
+                                            alignItems: 'center'
+                                        }} >
+                                            <p style={{ padding: 0, margin: 5 }} >Show parameters:</p>
+                                            
+                                            {
+                                                ALLOWED_DISPLAY_PARAMS.map(param => {
+                                                    if (this.state.displayParameters.indexOf(param) > -1) {
+                                                            return (
+                                                                <Button 
+                                                                    color="success"
+                                                                    style={{
+                                                                        margin: 5
+                                                                    }}
+                                                                    onClick={() => { this.toggleDisplayParameter(param) }}
+                                                                    >{param}</Button>
+                                                            )
+                                                        } else {
+                                                            return (
+                                                                <Button
+                                                                    outline
+                                                                    color="info"
+                                                                    style={{
+                                                                        margin: 5
+                                                                    }}
+                                                                    onClick={() => { this.toggleDisplayParameter(param) }}
+                                                                    >{param}</Button>
+                                                            )
+                                                        }
+                                                })
+                                            }
+                                            
+                                        </Row>
                                     </div>
                                 </div>
                             </div>
@@ -214,10 +294,7 @@ class Devices extends Component {
 
                     </div>
                 </div>
-
-                {/* <Rightsidebar>
-                    <DashboardRightSidebar />
-                </Rightsidebar> */}
+                
             </React.Fragment>
         );
     }
