@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Row, Col, Card, CardBody, TabContent, TabPane, Nav, NavItem, NavLink } from 'reactstrap';
+import { Row, Col, Card, CardBody } from 'reactstrap';
 import { activateAuthLayout } from '../store/actions';
 import Settingmenu from '../containers/MainContent/Subpages/Settingmenu';
-import { Link } from 'react-router-dom';
 
 
 

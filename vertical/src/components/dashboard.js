@@ -1,20 +1,16 @@
 import React, { Component } from 'react';
-import { Row, Col, Card, CardBody, TabContent, TabPane, Nav, NavItem, NavLink } from 'reactstrap';
-import { activateAuthLayout } from '../../../store/actions';
+import { Row, Col, Card, CardBody } from 'reactstrap';
+import { activateAuthLayout } from '../store/actions';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import Settingmenu from '../Subpages/Settingmenu';
-import { Link } from 'react-router-dom';
+// import Settingmenu from '../Subpages/Settingmenu';
 
-import Rightsidebar from '../../../components/RightSidebar';
-import DashboardRightSidebar from './rightbar';
-
-import Apexchart1 from '../../../containers/charts/apex/apexchart1';
-import Apexchart2 from '../../../containers/charts/apex/apexchart2';
-import Apexchart3 from '../../../containers/charts/apex/apexchart3';
+import Apexchart1 from '../containers/charts/apex/apexchart1';
+import Apexchart2 from '../containers/charts/apex/apexchart2';
+import Apexchart3 from '../containers/charts/apex/apexchart3';
 
 //Charts
-import Apexarea from '../../../containers/charts/apex/apexarea';
+// import Apexarea from '../../../containers/charts/apex/apexarea';
 import axios from 'axios';
 
 class Dashboard extends Component {
@@ -34,7 +30,7 @@ class Dashboard extends Component {
     getData () {
         axios.post('http://localhost:3010/aws_query_devices', {
             parameters: ["temp", "pressure", "humidity", "tsAWS"],
-            start_timestamp: Math.floor((Date.now() / 1000) - 1500000),
+            start_timestamp: Math.floor((Date.now() / 1000) - 150000),
             end_timestamp: Math.floor(Date.now() / 1000),
             devices: this.state.devices
         })
@@ -153,11 +149,11 @@ class Dashboard extends Component {
                                         <li className="breadcrumb-item active">Latest updates from IoT devices</li>
                                     </ol>
                                 </div>
-                                <div className="col-sm-6">
+                                {/* <div className="col-sm-6">
                                     <div className="float-right d-none d-md-block">
                                         <Settingmenu />
                                     </div>
-                                </div>
+                                </div> */}
                             </div>
                         </div>
 
