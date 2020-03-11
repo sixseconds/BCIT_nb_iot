@@ -34,3 +34,4 @@ yarn-error.log*
 /client/yarn-error.log*
 
 /vertical/node_modules
+/vertical/build

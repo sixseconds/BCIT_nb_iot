@@ -60,12 +60,17 @@ class Sidebar extends Component {
         for (var i = 0; i < items.length; ++i) {
             if (this.props.location.pathname === items[i].pathname) {
                 matchingMenuItem = items[i];
-                break;
+            } else {
+                items[i].classList.remove('mm-active');
             }
         }
         if (matchingMenuItem) {
             this.activateParentDropdown(matchingMenuItem);
         }
+    }
+    
+    componentDidUpdate() {
+        this.componentDidMount();
     }
 
     activateParentDropdown = (item) => {

@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { withRouter } from "react-router";
-import NotificationMenu from './Menus/notificationMenu';
-import ProfileMenu from './Menus/profileMenu';
-import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
+// import NotificationMenu from './Menus/notificationMenu';
+// import ProfileMenu from './Menus/profileMenu';
 import { connect } from 'react-redux';
 import { toggleSidebar  } from '../../store/actions';
 
@@ -11,7 +10,6 @@ import { toggleSidebar  } from '../../store/actions';
 
 import logoLight from "../../images/logo-light.png";
 import logoDark from "../../images/logo-dark.png";
-import logoSmall from "../../images/logo-sm.png";
 
 class Topbar extends Component {
 
@@ -84,7 +82,7 @@ class Topbar extends Component {
                                 </Link>
                             </li>
 
-                            <NotificationMenu />
+                            {/* <NotificationMenu /> */}
                         </ul>
 
                         <ul className="list-inline menu-left mb-0">

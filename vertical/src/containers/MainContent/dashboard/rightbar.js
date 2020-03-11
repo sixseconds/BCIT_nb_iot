@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { VectorMap } from 'react-jvectormap';
-import user1 from "../../../images/users/user-1.jpg";
+// import user1 from "../../../images/users/user-1.jpg";
 import "./rightbar.css";
 
 class Rightbar extends Component {
@@ -33,7 +33,7 @@ class Rightbar extends Component {
                         <div className="mx-3">
                             <div className="bg-white user-wid-content p-1 rounded">
                                 <div className="user-img">
-                                    <img src={user1} alt="user-img" title="" className="rounded-circle thumb-md img-fluid" />
+                                    {/* <img src={user1} alt="user-img" title="" className="rounded-circle thumb-md img-fluid" /> */}
                                 </div>
                                 <h5 className="font-14 mb-1"><Link to="#">James Heine</Link> </h5>
                                 <p className="text-muted mb-2"><small>Admin Head</small></p>
