@@ -13,7 +13,6 @@ class Parameters extends Component {
     }
 
     render() {
-
         return (
             <React.Fragment>
                 <div className="content">

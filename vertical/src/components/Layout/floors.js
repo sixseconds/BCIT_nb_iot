@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 
-
 const styles = {
     deviceBlip: { 
         width: 20, 
@@ -21,12 +20,15 @@ export default class Floor extends Component {
         }   
     }
 
-
-
     renderDeviceView() {
         return this.props.devices.map(
             device => (
-            <Link to="/iot_devices" >
+            <Link to={{
+                pathname: '/iot_devices',
+                state: {
+                  selectedDevice: device.id
+                }
+              }} >
                 <div 
                 className="device_blip"
                 key={device.id} 
