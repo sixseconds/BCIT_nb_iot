@@ -13,7 +13,7 @@ import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 let api = axios.create({
-    baseURL: "http://localhost:3010"
+    baseURL: "http://104.223.143.151:3010"
 });
   
 const MAX_CONCURRENT_REQUESTS = 1;
