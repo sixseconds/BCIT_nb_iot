@@ -4,37 +4,48 @@ import React, {
 
 import ReactApexChart from 'react-apexcharts';
 
+
+const getTimeTextFromUnixTime = (unixTime) => {
+    const dateObj = new Date();
+
+    dateObj.setTime(unixTime);
+
+    // return something like 'Mar 03, 08:01'
+    return dateObj.toDateString().substr(4, dateObj.toDateString().length - 9) + " " + dateObj.toTimeString().substr(0, 5)
+}
+
 // Chart to show the temperature readings from each chart
 export class AllTemperatureChart extends Component {
     constructor(props) {
         super(props);
         this.state = {
 
+            devices: ["AWS1", "AWS2", "AWS3", "AWS4", "AWS5"],
+
+            // Chart styling
+            options: {
+
             // data for each series
             series: [
                 {
-                    // device 1 temperature 
+                    // device 1 temperature
                     name: 'Device1',
                     type: 'line',
-                    data: [1,2,3,5,7,8], // TODO: add data
-                }, 
+                    data: [7,8,5,2,9,2]
+                },
                 {
                     // device 2 temperature
                     name: 'Device2',
                     type: 'line',
                     data: [3,4,7,4,7,2], // TODO: add data
-                }, 
+                },
                 {
                     // device 3 temperature
                     name: 'Device3',
                     type: 'line',
                     data: [7,4,2,8,9,1], // TODO: add data
-                }, 
-                    
-                
+                },
             ],
-            // Chart styling
-            options: {
                 chart: {
                     height: 900,
                     type: 'line',
@@ -50,26 +61,22 @@ export class AllTemperatureChart extends Component {
                   dataLabels: {
                       enabled: false
                   },
-                  //   stroke: {
-                  //     width: [3, 4, 3],
-                  //     curve: 'straight',
-                  //     dashArray: [0, 8, 5]
-                  //   },
                   title: {
                       text: 'Temperature From All Devices',
                       align: 'left'
                   },
                   markers: {
                       size: 0,
-
                       hover: {
                           sizeOffset: 6
                       }
                   },
                   xaxis: {
-                      categories: ['01 Jan', '02 Jan', '03 Jan', '04 Jan', '05 Jan', '06 Jan', '07 Jan', '08 Jan', '09 Jan',
-                          '10 Jan', '11 Jan', '12 Jan'
-                      ],
+                      type: "text",
+                      tickPlacement: 'on'
+                  },
+                  yaxis: {
+
                   },
                   legend: {
                       show: true,
@@ -107,19 +114,16 @@ export class AllTemperatureChart extends Component {
         };
     }
     render() {
-        return ( 
-            <div className = 'app' >
-                <div className = 'row' >
-                    <div className = 'mixed-chart' >
-                        <ReactApexChart 
-                            options = {this.state.options}
-                            series = {this.state.series}
-                            type = 'line'
-                            width = '1000' 
-                        />
-                    </div> 
-                </div> 
-            </div>
+        return (
+            <React.Fragment>
+                <ReactApexChart
+                    // id = {this.props.device.deviceID}
+                    options = {this.state.options}
+                    series = {this.state.options.series}
+                    type = 'line'
+                    width = '1000'
+                />
+            </React.Fragment>
         );
     }
 }

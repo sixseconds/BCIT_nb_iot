@@ -12,7 +12,7 @@ export class AllHumidityChart extends Component {
             // data for each series
             series: [
                 {
-                    // device 1 humidity 
+                    // device 1 humidity
                     name: 'Device1',
                     type: 'line',
                     data: [13, 19, 15, 11, 12, 14], // TODO: add data
@@ -65,7 +65,6 @@ export class AllHumidityChart extends Component {
               },
               markers: {
                 size: 0,
-          
                 hover: {
                   sizeOffset: 6
                 }
@@ -111,18 +110,18 @@ export class AllHumidityChart extends Component {
         };
     }
     render() {
-        return ( 
+        return (
             <div className = 'app' >
                 <div className = 'row' >
                     <div className = 'line' >
-                        <ReactApexChart 
+                        <ReactApexChart
                             options = {this.state.options}
                             series = {this.state.series}
                             type = 'line'
-                            width = '1000' 
+                            width = '1000'
                         />
-                    </div> 
-                </div> 
+                    </div>
+                </div>
             </div>
         );
     }

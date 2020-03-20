@@ -12,17 +12,17 @@ export class AllPressureChart extends Component {
             // data for each series
             series: [
                 {
-                    // device 1 pressure 
+                    // device 1 pressure
                     name: 'Device1',
                     type: 'line',
                     data: [], // TODO: add data
-                }, 
+                },
                 {
                     // device 2 pressure
                     name: 'Device2',
                     type: 'line',
                     data: [], // TODO: add data
-                }, 
+                },
                 {
                     // device 2 pressure
                     name: 'Device3',
@@ -104,18 +104,18 @@ export class AllPressureChart extends Component {
         };
     }
     render() {
-        return ( 
+        return (
             <div className = 'app' >
                 <div className = 'row' >
                     <div className = 'mixed-chart' >
-                        <ReactApexChart 
+                        <ReactApexChart
                             options = {this.state.options}
                             series = {this.state.series}
                             type = 'line'
-                            width = '1000' 
+                            width = '1000'
                         />
-                    </div> 
-                </div> 
+                    </div>
+                </div>
             </div>
         );
     }

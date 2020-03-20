@@ -5,11 +5,15 @@ import { activateAuthLayout } from '../store/actions';
 import Settingmenu from '../containers/MainContent/Subpages/Settingmenu';
 import { Link } from 'react-router-dom';
 import classnames from 'classnames';
+import { useRouteMatch } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+
+import axios from 'axios';
 
 import AllHumidityChart from '../components/charts/allHumidity';
 import AllTemperatureChart from '../components/charts/allTemperatures';
 import AllPressureChart from '../components/charts/allPressure';
-import DateRange from '../components/datePicker/datePicker';
+
 
 
 class Parameters extends Component {
@@ -18,13 +22,14 @@ class Parameters extends Component {
         super(props);
 
         this.state = {
-            activeTab1: '5'
+            // tab toggle
+            activeTab1: '5',
+            // aws data
+            startDate: new Date(),
+            devices: ["AWS1", "AWS2", "AWS3", "AWS4", "AWS5"],
+
         }
         this.toggle1 = this.toggle1.bind(this);
-    }
-
-    componentDidMount() {
-        this.props.activateAuthLayout();
     }
 
     toggle1(tab) {
@@ -35,6 +40,21 @@ class Parameters extends Component {
         }
     }
 
+    getData () {
+        axios.post('http://localhost:3010/aws_query_devices', {
+            parameters: ["temp", "pressure", "humidity", "tsAWS"],
+            start_timestamp: Math.floor((Date.now() / 1000) - 1500000),
+            end_timestamp: Math.floor(Date.now() / 1000),
+            devices: this.state.devices
+        })
+        .then(d => this.setState({ data: d.data }))
+        .catch(e => console.log(e))
+    }
+
+    componentDidMount() {
+        this.getData();
+        this.props.activateAuthLayout();
+    }
     render() {
 
         return (
@@ -152,7 +172,7 @@ class Parameters extends Component {
                 </Row>
             </React.Fragment>
         );
-    } 
+    }
 }
 
 export default connect(null, { activateAuthLayout })(Parameters);
