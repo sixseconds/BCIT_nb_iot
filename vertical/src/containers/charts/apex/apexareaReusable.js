@@ -81,7 +81,7 @@ class ApexareaReusable extends Component {
 
         return (
             <React.Fragment>
-                <ReactApexChart options={this.state.options} series={d} type="area" width="100%" height="299" />
+                <ReactApexChart options={this.state.options} series={d} type="area" width="100%" height="800" />
             </React.Fragment>
         );
     }

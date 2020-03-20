@@ -31,6 +31,10 @@ class Topbar extends Component {
         document.body.classList.toggle('enlarged');
         this.props.toggleSidebar(!this.props.is_toggle);
      }
+     
+     componentDidMount () {
+         this.sidebarToggle();
+     }
 
     
     toggleFullscreen() {

@@ -23,13 +23,8 @@ export default class Locations extends Component {
         this.state = {
             currentFloor: 0,
             floor: null,
-            
         };
-        
     }
-    
-    
-
 
     render() {
         
@@ -68,6 +63,8 @@ export default class Locations extends Component {
                         devices={this.props.dummyData.allDevices.filter((device) => {
                             if (this.props.dummyData.floors[this.state.currentFloor] === device.location)
                                 return device
+                                
+                            return false
                         })} 
                     />
                 </div>

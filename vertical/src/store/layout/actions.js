@@ -1,6 +1,7 @@
 import { ACTIVATE_AUTH_LAYOUT, ACTIVATE_NON_AUTH_LAYOUT, TOGGLE, TOGGLE_LD } from './actionTypes';
 
 export const activateAuthLayout = () => {
+    console.log('eeeeeeeeeeeeeeeeeeeeee')
     return {
         type: ACTIVATE_AUTH_LAYOUT,
         payload: {

@@ -9,6 +9,9 @@ import { Link } from 'react-router-dom';
 import Rightsidebar from '../../../components/RightSidebar';
 import DashboardRightSidebar from './rightbar';
 
+import { ConcurrencyManager } from "axios-concurrency";
+import axios from 'axios';
+
 import Apexchart1 from '../../../containers/charts/apex/apexchart1';
 import Apexchart2 from '../../../containers/charts/apex/apexchart2';
 import Apexchart3 from '../../../containers/charts/apex/apexchart3';

@@ -8,7 +8,7 @@ class radial_chart extends Component {
 
         this.state = {
             chart: {
-                height: 380,
+                height: 80,
                 type: 'radialBar',
                 foreColor: '#9f9ea4',
             },
@@ -22,7 +22,7 @@ class radial_chart extends Component {
                             fontSize: '16px',
                         },
                         total: {
-                            show: true,
+                            show: false,
                             label: 'Total',
                             formatter: function (w) {
                                 return 249
@@ -31,9 +31,9 @@ class radial_chart extends Component {
                     }
                 }
             },
-            series: [44, 55, 67, 83],
-            labels: ['Computer', 'Tablet', 'Laptop', 'Mobile'],
-            colors: ['#4090cb', '#e74c5e', '#47bd9a', '#06c2de'],
+            series: [this.props.health],
+            labels: ['Health'],
+            colors: ['#4090cb'],
         }
     }
 
@@ -41,7 +41,7 @@ class radial_chart extends Component {
         
         return (
             <React.Fragment>
-                <ReactApexChart options={this.state.plotOptions} series={this.state.series} type="radialBar" height="355" />
+                <ReactApexChart options={this.state.plotOptions} series={this.state.series} type="radialBar" height="150" />
             </React.Fragment>
         );
     }
