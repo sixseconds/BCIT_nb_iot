@@ -29,7 +29,7 @@ class bar_chart extends Component {
                     borderColor: '#f1f1f1',
                 },
                 xaxis: {
-                    categories: ['South Korea', 'Canada', 'United Kingdom', 'Netherlands', 'Italy', 'France', 'Japan', 'United States', 'China', 'Germany'],
+                    categories: [ "AWS5", "AWS4", "AWS2", "AWS1", "AWS3" ],
                 }
           }
         }
@@ -37,7 +37,7 @@ class bar_chart extends Component {
 
     render() {
         const apexBarChartData = [{
-            data: [380, 430, 450, 475, 550, 584, 780, 1100, 1220, 1365]
+            data: [380, 430, 450, 475, 550]
         }];
 
         return (

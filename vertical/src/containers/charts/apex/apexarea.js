@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import ReactApexChart from 'react-apexcharts';
 
-const getTimeTextFromUnixTime = (unixTime) => {
+const getTimeTextFromUnixTime = unixTime => {
     const dateObj = new Date();
 
     dateObj.setTime(unixTime);
@@ -10,12 +10,32 @@ const getTimeTextFromUnixTime = (unixTime) => {
     return dateObj.toDateString().substr(4,dateObj.toDateString().length - 9) + " " + dateObj.toTimeString().substr(0,5)
 }
 
+const displayParamParsable = p => {
+    if (p === "Temperature") return "temp";
+    if (p === "Pressure") return "pressure";
+    if (p === "Humidity") return "humidity";
+}
+
+const getColors = params => {
+    return params.map(p => {
+        if (p === "Temperature") return '#008080';
+        if (p === "Humidity") return '#FFFF00';
+        if (p === "Pressure") return '#4B0082';
+        return '#008080';
+    })
+}
+
 class Apexarea extends Component {
 
     constructor(props) {
         super(props);
+        
+        let displayParams = []
+        
+        if (this.props.left !== null) displayParams.push(this.props.left);
+        if (this.props.right !== null) displayParams.push(this.props.right);
 
-        this.state = {
+        let stateObj = {
             options: {
                 chart: {
                     type: 'area',
@@ -36,23 +56,19 @@ class Apexarea extends Component {
                     curve: 'smooth',
                     width: 2
                 },
-                colors: ['#4090cb', '#003e6b'],
+                colors: getColors(displayParams),
                 xaxis: {
                     type: "text",
                     tickPlacement: 'on'
                 },
-                yaxis: [{
-                    title: {
-                        text: this.props.left
-                    },
-                    seriesName: this.props.left
-                }, {
-                    title: {
-                        text: this.props.right
-                    },
-                    seriesName: this.props.right,
-                    opposite: true
-                }],
+                yaxis: displayParams.map(p => {
+                    return {
+                        title: {
+                            text: p
+                        },
+                        seriesName: p
+                    }
+                }),
                 grid: {
                     yaxis: {
                         lines: {
@@ -64,29 +80,27 @@ class Apexarea extends Component {
                         right: 30
                     }
                 },
-                series: [{
-                    name: 'Temperature',
-                    data: this.props.device.tsAWS.map((ts, i) => {
-                        return {
-                            x: getTimeTextFromUnixTime(ts*1000),
-                            y: this.props.device.temp[i]
-                        }
-                    })
-                }, {
-                    name: 'Humidity',
-                    data: this.props.device.tsAWS.map((ts, i) => {
-                        return {
-                            x: getTimeTextFromUnixTime(ts*1000),
-                            y: this.props.device.humidity[i]
-                        }
-                    })
-                }]
+                series: displayParams.map(p => {
+                    return {
+                        name: p,
+                        data: this.props.device.tsAWS.map((ts, i) => {
+                            return {
+                                x: getTimeTextFromUnixTime(ts*1000),
+                                y: this.props.device[displayParamParsable(p)][i]
+                            }
+                        }).filter((dataPoint, i) => !props.dataFiltering || i % 15 === 0)
+                    }
+                })
             }
-
         }
+        
+        if (displayParams.length === 2) stateObj.options.yaxis[1].opposite = true; 
+        this.state = stateObj;
     }
 
     render() {
+        // console.log(this.props.device.tsAWS.length + ' => ' + this.state.options.series[0].data.length);
+        
         return (
             <React.Fragment>
                 <ReactApexChart id={this.props.device.deviceID} options={this.state.options} series={this.state.options.series} type="area" width="100%" height="299" />
