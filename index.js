@@ -183,6 +183,130 @@ app.post('/azure_query_devices', async (req, res) => {
         }
 })
 
+// Mongo
+
+// Copied from AWS!
+app.post('/mongo_query_devices', (req, res) => {
+    // check if required parameters in request body exist
+    var MongoClient = require('mongodb').MongoClient;
+    var assert = require('assert');
+    var ObjectId = require('mongodb').ObjectID;
+    var url = 'mongodb://nb-iot:e3SUOf0p3Vnd6FVzQdPgkHR8zL3GBoRblxYYDp30wZ8zXoQNRUeJHKAwYOqbrUatiOFjdPFkiHMzVBn1nCGyZw==@nb-iot.mongo.cosmos.azure.com:10255/?ssl=true&replicaSet=globaldb&retrywrites=false&maxIdleTimeMS=120000&appName=@nb-iot@';
+    
+    if (req.body.parameters && 
+        req.body.start_timestamp && 
+        req.body.end_timestamp &&
+        req.body.devices) {
+            var response_arr = [];
+
+        var findData = function(db, params, projectionJSON, callback) {
+            console.log(params)
+            var cursor =db.collection('nbIOTstore').find( params ).project( projectionJSON );
+            let data = {}
+            for(let k = 0; k < req.body.parameters.length; k++) {
+                let param = req.body.parameters[k];
+                // console.log(param);
+                data[param] = [];
+            }
+            console.log("empty data")
+            console.dir(data)
+            cursor.each(function(err, doc) {
+                if (err != null) {console.log(err)}
+                assert.equal(err, null);
+                if (doc != null) {
+                    // console.log("doc")
+                    // console.dir(doc);
+                    for(let l = 0; l < req.body.parameters.length; l++) {
+                        let param = req.body.parameters[l];
+
+                        let arr = data[param];
+                        let dat = null
+                        if (param == "tsAWS") {
+                            dat = doc["tsAzure"]
+                        }
+                        else {
+                            dat = doc[param]
+                        }
+                        // let dat = doc[param]
+                        arr.push(dat)
+                        // console.log(arr);
+                        // data[param].append(doc[param])
+
+                    }
+
+                    //         console.log("Query succeeded.");
+                    //         let dataObj = {
+                    //             deviceID: req.body.devices[i],
+                    //         }
+                    //         req.body.parameters.forEach(p => {
+                    //             dataObj[p] = data.Items.map(item => item[p])
+                    //         });
+                    //         response_arr.push(dataObj)
+                            
+                    //         if (response_arr.length == req.body.devices.length)
+                    //             res.json(response_arr)
+                } else {
+                    callback();
+                    console.log("else")
+                }
+                    // callback();
+            });
+            // console.log("filled data")
+            // console.dir(data);
+
+            response_arr.push(data)
+            console.log(response_arr.length)
+            // callback();
+            };
+
+            for (let i = 0; i < req.body.devices.length; i++) {
+                let projectionJSON = {}
+                for(let j = 0; j < req.body.parameters.length; j++) {
+                    let param_name = req.body.parameters[j]
+                    if (param_name != "tsAWS") {
+
+                    projectionJSON[param_name] = 1;
+                    }
+                    else {
+
+                    projectionJSON["tsAzure"] = 1;
+                    }
+                }
+
+                let params = {
+                    "deviceID" : req.body.devices[i],
+                     "tsAzure" : { 
+                        $gt : req.body.start_timestamp, 
+                        $lt : req.body.end_timestamp
+                    }
+                }
+
+
+                MongoClient.connect(url, function(err, client) {
+                    assert.equal(null, err);
+                    var db = client.db('nbIOT');
+                    findData(db, params, projectionJSON, function() {
+                        // console.log("done finding data")
+                        console.log("Query succeeded (azure mongo)")
+
+                        // console.dir(response_arr)
+                if (response_arr.length == req.body.devices.length){
+                    // console.dir(response_arr)
+                    // console.dir(response_arr[req.body.devices.length-1])
+                    res.json(response_arr)
+                    console.log("res set")
+                }
+                    });
+                    });
+            }
+
+            
+    } else {
+        res.status(400);
+        res.send('Bad request. Please change your request to include the right fields in the body.');
+    }
+})
+
 app.listen(PORT, () => console.log(`listening on port ${PORT}`));
 
 
