@@ -3,9 +3,9 @@ import ReactApexChart from 'react-apexcharts';
 
 const getTimeTextFromUnixTime = (unixTime) => {
     const dateObj = new Date();
-    
+
     dateObj.setTime(unixTime);
-    
+
     // return something like 'Mar 03, 08:01'
     return dateObj.toDateString().substr(4,dateObj.toDateString().length - 9) + " " + dateObj.toTimeString().substr(0,5)
 }
@@ -17,7 +17,7 @@ class ApexareaReusable extends Component {
         this.state = {
             options: {
                 chart: {
-                    type: 'area',   
+                    type: 'area',
                     foreColor: '#9f9ea4',
                     toolbar: {
                         show: true,
@@ -32,7 +32,7 @@ class ApexareaReusable extends Component {
                 },
                 fill: {
                     colors: [(this.props.color) ? this.props.color : '#4090cb']
-                },                  
+                },
                 colors: ['#4090cb'],
                 xaxis: {
                     type: "text",
@@ -55,11 +55,11 @@ class ApexareaReusable extends Component {
                         }
                     })
             }]
-            
-            }
+
+        }
 
         this.fetchIcons = this.fetchIcons.bind(this);
-        }
+    }
 
     fetchIcons () {
         fetch('http://localhost:3000/getdata')
@@ -69,7 +69,7 @@ class ApexareaReusable extends Component {
                     data: [data.temp]
                 })
             })
-    }     
+    }
 
     componentDidMount () {
         this.fetchIcons();
@@ -87,4 +87,4 @@ class ApexareaReusable extends Component {
     }
 }
 
-export default ApexareaReusable;   
+export default ApexareaReusable;

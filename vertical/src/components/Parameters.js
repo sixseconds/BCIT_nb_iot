@@ -1,59 +1,188 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { Row, Col, Card, CardBody } from 'reactstrap';
-import { activateAuthLayout } from '../store/actions';
-import Settingmenu from '../containers/MainContent/Subpages/Settingmenu';
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import {
+  Row,
+  Col,
+  Card,
+  CardBody,
+  TabContent,
+  TabPane,
+  Nav,
+  NavItem,
+  NavLink,
+  CardText
+} from "reactstrap";
+import { activateAuthLayout } from "../store/actions";
+import Settingmenu from "../containers/MainContent/Subpages/Settingmenu";
+import { Link } from "react-router-dom";
+import classnames from "classnames";
+import { useRouteMatch } from "react-router-dom";
+import { useDispatch } from "react-redux";
 
+import axios from "axios";
 
+import AllHumidityChart from "../components/charts/allHumidity";
+import AllTemperatureChart from "../components/charts/allTemperatures";
+import AllPressureChart from "../components/charts/allPressure";
 
 class Parameters extends Component {
+  constructor(props) {
+    super(props);
 
-    componentDidMount() {
-        this.props.activateAuthLayout();
+    this.state = {
+      // tab toggle
+      activeTab1: "5",
+      // aws data
+      startDate: new Date(),
+      devices: ["AWS1", "AWS2", "AWS3", "AWS4", "AWS5"]
+    };
+    this.toggle1 = this.toggle1.bind(this);
+  }
+
+  toggle1(tab) {
+    if (this.state.activeTab1 !== tab) {
+      this.setState({
+        activeTab1: tab
+      });
     }
+  }
 
-    render() {
-        return (
-            <React.Fragment>
-                <div className="content">
-                    <div className="container-fluid">
-                        <div className="page-title-box">
-                            <div className="row align-items-center">
-                                <div className="col-sm-6">
-                                    <h4 className="page-title">Parameters</h4>
-                                    <ol className="breadcrumb">
-                                        <li className="breadcrumb-item active">Toggle devices and parameters to compare device data</li>
-                                    </ol>
-                                </div>
-                                <div className="col-sm-6">
-                                    <div className="float-right d-none d-md-block">
-                                        <Settingmenu />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+  getData() {
+    axios
+      .post("http://localhost:3010/aws_query_devices", {
+        parameters: ["temp", "pressure", "humidity", "tsAWS"],
+        start_timestamp: Math.floor(Date.now() / 1000 - 1500000),
+        end_timestamp: Math.floor(Date.now() / 1000),
+        devices: this.state.devices
+      })
+      .then(d => this.setState({ data: d.data }))
+      .catch(e => console.log(e));
+  }
 
-                        <Row>
-                            <Col lg="3">
-                                <Card className="card border border-primary text-white">
-                                    <div className="card-header bg-white border-primary">
-                                        <h5 className="font-16 my-0">
-                                            <i className="mdi mdi-temperature-celsius"></i> | 
-                                            <i className="mdi mdi-temperature-fahrenheit"></i>
-                                        </h5>
-                                    </div>
-                                    <CardBody>
-                                        <h5 className="card-title font-16 mt-0">Temperature</h5>
-                                    </CardBody>
-                                </Card>
-                            </Col>
-                        </Row>
-
+  componentDidMount() {
+    this.getData();
+    this.props.activateAuthLayout();
+  }
+  render() {
+    return (
+      <React.Fragment>
+        <Row>
+          <div className="content">
+            <div className="container-fluid">
+              <div className="page-title-box">
+                <div className="row align-items-center">
+                  <div className="col-sm-6">
+                    <h4 className="page-title">Parameters</h4>
+                    <ol className="breadcrumb">
+                      <li className="breadcrumb-item active">
+                        Toggle devices and parameters to compare device data
+                      </li>
+                    </ol>
+                  </div>
+                  <div className="col-sm-6">
+                    <div className="float-right d-none d-md-block">
+                      <Settingmenu />
                     </div>
+                  </div>
                 </div>
-            </React.Fragment>
-        );
-    }
+              </div>
+
+              <Row>
+                <Col>
+                  <Card>
+                    <CardBody>
+                      <Nav pills className="navtab-bg nav-justified">
+                        <NavItem>
+                          <NavLink
+                            className={classnames({
+                              active: this.state.activeTab1 === "5"
+                            })}
+                            onClick={() => {
+                              this.toggle1("5");
+                            }}
+                          >
+                            Temperature
+                          </NavLink>
+                        </NavItem>
+                        <NavItem>
+                          <NavLink
+                            className={classnames({
+                              active: this.state.activeTab1 === "6"
+                            })}
+                            onClick={() => {
+                              this.toggle1("6");
+                            }}
+                          >
+                            Humidity
+                          </NavLink>
+                        </NavItem>
+                        <NavItem>
+                          <NavLink
+                            className={classnames({
+                              active: this.state.activeTab1 === "7"
+                            })}
+                            onClick={() => {
+                              this.toggle1("7");
+                            }}
+                          >
+                            Pressure
+                          </NavLink>
+                        </NavItem>
+                      </Nav>
+                      <TabContent activeTab={this.state.activeTab1}>
+                        <TabPane tabId="5" className="p-3">
+                          <Row>
+                            <Col
+                              sm="12"
+                              style={{
+                                display: "flex",
+                                justifyContent: "center",
+                                alignItems: "center"
+                              }}
+                            >
+                              <AllTemperatureChart />
+                            </Col>
+                          </Row>
+                        </TabPane>
+                        <TabPane tabId="6" className="p-3">
+                          <Row>
+                            <Col
+                              sm="12"
+                              style={{
+                                display: "flex",
+                                justifyContent: "center",
+                                alignItems: "center"
+                              }}
+                            >
+                              <AllHumidityChart />
+                            </Col>
+                          </Row>
+                        </TabPane>
+                        <TabPane tabId="7" className="p-3">
+                          <Row>
+                            <Col
+                              sm="12"
+                              style={{
+                                display: "flex",
+                                justifyContent: "center",
+                                alignItems: "center"
+                              }}
+                            >
+                              <AllPressureChart />
+                            </Col>
+                          </Row>
+                        </TabPane>
+                      </TabContent>
+                    </CardBody>
+                  </Card>
+                </Col>
+              </Row>
+            </div>
+          </div>
+        </Row>
+      </React.Fragment>
+    );
+  }
 }
 
 export default connect(null, { activateAuthLayout })(Parameters);

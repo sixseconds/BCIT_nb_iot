@@ -332,5 +332,51 @@ const Devices = props => {
     );
 }
 
-export default withRouter(connect(null, { activateAuthLayout })(Devices));
+    return (
+      <React.Fragment>
+        <div className="content">
+          <div className="container-fluid">
+            <div className="page-title-box">
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center"
+                }}
+              >
+                {backButton}
+                <div>
+                  <h4 className="page-title">Devices</h4>
+                  <ol className="breadcrumb">
+                    <li className="breadcrumb-item active">
+                      {this.state.selected != null
+                        ? this.state.data[this.state.selected].deviceID
+                        : "All devices"}
+                    </li>
+                  </ol>
+                </div>
+                <div>
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center"
+                    }}
+                  >
+                    <label style={{ margin: 5 }}>From:</label>
+                    <input
+                      style={{ margin: 5 }}
+                      className="form-control"
+                      type="search"
+                      placeholder="March 1 @ 18:00"
+                      id="example-search-input"
+                    />
+                    <label style={{ margin: 5 }}>To:</label>
+                    <input
+                      style={{ margin: 5 }}
+                      className="form-control"
+                      type="search"
+                      placeholder="March 5 @ 10:00"
+                      id="example-search-input"
+                    />
 

@@ -1,53 +1,59 @@
 import React, {
     Component
 } from 'react';
+
 import ReactApexChart from 'react-apexcharts';
 
-// Chart for single pressure reading
-export class PressureChart extends Component {
+// Chart for single humidity reading
+export class HumidityChart extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            // Chart data
+            
             series: [{
-                name: 'Pressure',
-                type: 'line',
+                name: 'Humidity',
                 data: this.props.data
             }],
-            // Chart Styling
             options: {
                 chart: {
-                    height: 500,
+                    height: 400,
                     type: 'line',
-                    id: "Pressure",
+                    id: "Humidity",
                     foreColor: '#9f9ea4',
                     stacked: false,
                     toolbar: {
                         show: false
+                    },
+                    zoom: {
+                        enabled: false
                     }
                 },
-                // colors for series
+                // series colors
                 colors: ['#4090cb', '#e74c5e', '#47bd9a'],
-                // datalabels
                 dataLabels: {
-                enabled: false
+                    enabled: false
                 },
-                // Chart title
+                // chart title
                 title: {
-                    text: "Pressure",
+                    text: "Humidity (%)",
                     align: 'center',
                     style: {
                         fontSize: 16,
                     }
                 },
+                // markers
                 markers: {
+                    style: 'inverted',
                     size: 5,
-                    style: 'inverted'
+                    hover: {
+                        sizeOffset: 6
+                    }
                 },
+                
                 // X axis options
+                // TODO: make x axis datalabels real time
                 xaxis: {
                     categories: ['Jan 12', 'Jan 13', 'Jan 14', 'Jan 15', 'Jan 16', 'Jan 17', 'Jan 18', 'Jan 19'],
-                    title: 'Day'
                 },
                 // Y axis options
                 // yaxis: {
@@ -57,36 +63,32 @@ export class PressureChart extends Component {
                 //     labels: {
                 //         show: true,
                 //         align: 'right',
-                //         style: {
-                //             fontSize: '12px',
-                //         },
                 //     },
                 //     title: {
-                //         text: 'Pressure (hPa)',
+                //         text: 'Humidity (%)',
                 //         style: {
                 //             fontSize: '12px',
+                //             fontStyle: 'bold'
                 //         },
                 //     },
-
                 // },
-                // tooltip
                 tooltip: {
                     y: [{
                     title: {
                         formatter: function (val) {
-                        return val + " (hPa)"
+                        return val + " (%)"
                         }
                     }
                     }],                
                 },
-                // grid styling
+                // Grid options
                 grid: {
-                    borderColor: '#f1f1f1',
-                },
-
+                  borderColor: '#f1f1f1',
+                }
             },
         };
     }
+
     render() {
         return ( 
             <div className = 'app' >
@@ -105,4 +107,4 @@ export class PressureChart extends Component {
     }
 }
 
-export default PressureChart
+export default HumidityChart
