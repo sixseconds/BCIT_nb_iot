@@ -1,227 +1,333 @@
-import React, { Component } from 'react';
-import { Row, Col, Card, CardBody, TabContent, TabPane, Nav, NavItem, NavLink } from 'reactstrap';
+import axios from 'axios';
+import { ConcurrencyManager } from "axios-concurrency";
+import React, { useEffect, useState } from 'react';
+import { useRouteMatch } from 'react-router-dom';
+import { Button, Card, CardBody, Col, Row, Spinner } from 'reactstrap';
+import Apexarea from '../containers/charts/apex/apexarea';
 import { activateAuthLayout } from '../store/actions';
+import './devices.css';
+import SimpleDateTimePicker from './SimpleDateTimePicker';
+import SingleDeviceView from './SingleDeviceView';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import Settingmenu from '../containers/MainContent/Subpages/Settingmenu';
-import { Link } from 'react-router-dom';
-import './devices.css';
 
-//Charts
-import Apexarea from '../containers/charts/apex/apexarea';
-import ApexareaReusable from '../containers/charts/apex/apexareaReusable';
+let api = axios.create({
+    baseURL: "http://54.189.101.20:3010"
+});
 
-const dummyData = {
-    allDevices: [
-      {
-        id: 0,
-        name: "iot_device_0",
-        temp: "13.4",
-        readings: 8,
-        tempData: [14, 12, 18, 12, 12, 11, 16, 12],
-        humidity: "20%",
-        humidityData: [21, 20, 20, 21, 20, 20, 20, 20],
-        pressure: "98Kpa",
-        pressureData: [98, 97, 98, 99, 100, 99, 99, 99],
-        location: "floor1.png",
-        coords: ["15%", "65%"]
-      },
-      {
-        id: 1,
-        name: "iot_device_1",
-        temp: "14.2",
-        readings: 8,
-        tempData: [14, 12, 12, 12, 13, 11, 14, 14],
-        humidity: "20%",
-        humidityData: [20, 20, 22, 21, 20, 19, 20, 20],
-        pressure: "98Kpa",
-        pressureData: [99, 100, 99, 99, 99, 98, 97, 98],
-        location: "floor1.png",
-        coords: ["55%", "35%"]
-      },
-      {
-        id: 2,
-        name: "iot_device_2",
-        temp: "13.0",
-        readings: 8,
-        tempData: [14, 12, 12, 11, 16, 12, 13, 13],
-        humidity: "23%",
-        humidityData: [20, 20, 20, 22, 20, 21, 21, 23],
-        pressure: "98Kpa",
-        pressureData: [98, 97, 98, 99, 100, 99, 99, 99],
-        location: "floor2.png",
-        coords: ["25%", "35%"]
-      }
-    ],
-    floors: ["floor1.png", "floor1m.png", "floor2.png"]
-  }
+const AWS_DEVICES = ["AWS1", "AWS2", "AWS3", "AWS4", "AWS5"];
+const getDeviceIndexFromName = name => AWS_DEVICES.indexOf(name);
+const MAX_CONCURRENT_REQUESTS = 1;
+ConcurrencyManager(api, MAX_CONCURRENT_REQUESTS);
+var CancelTokenSource = axios.CancelToken.source();
 
-class Devices extends Component {
+const getRandomKey = () => Math.floor(Math.random() * Math.floor(10000));
 
-    constructor(props) {
-        super(props);
-        this.state = { activeTab: '1', activeother: '1', startDate: new Date(), selected: null }
-        this.toggleStock = this.toggleStock.bind(this);
-        this.toggleMessages = this.toggleMessages.bind(this);
-        this.selectDevice = this.selectDevice.bind(this);
-        this.back = this.back.bind(this);
-        if (this.props.selected) this.state.selected = this.props.selected
-        console.log(props.selected)
-    }
-
-    componentDidMount() {
-        this.props.activateAuthLayout();
-        // document.body.classList = "";
-        // if (this.props.location.pathname === '/layout-light') {
-        //     document.body.classList.add('left-side-menu-light');
-        // }
-        // else if (this.props.location.pathname === '/layout-collapsed') {
-        //     document.body.classList.toggle('enlarged');
-        // }
-        // else { }
-    }
-
-    toggleStock(tab) {
-        if (this.state.activeTab !== tab) {
-            this.setState({
-                activeTab: tab
-            });
-        }
-    }
-
-    toggleMessages(tab) {
-        if (this.state.activeother !== tab) {
-            this.setState({
-                activeother: tab
-            });
-        }
-    }
-
-    selectDevice (i) {
-        console.log(i)
-        this.setState({ selected: i })
-    }
-
-    back () {
-        this.setState({ selected: null });
-    }
-
-    render() {
-
-        let content; 
-        let backButton = ''; 
+const DeviceCard = props => {
+    const AWS_DATA_QUERY_URL = '/aws_query_devices';
+    const [deviceData, setDeviceData] = useState(null);
+    let content = (
+        <Col xl="4">
+            <Card>
+                <CardBody>
+                    <h4><Spinner type="grow" color="primary" />Loading...</h4> 
+                </CardBody>
+            </Card>
+        </Col>
+    );
+    
+    useEffect(() => {
+        // const lsCheck = localStorage.getItem(props.deviceName);
         
+        // if (lsCheck) {
+        //     let d = JSON.parse(lsCheck);
+        //     if (props.default) {
+        //         setDeviceData(d.data);
+        //         return;
+        //     }
+        // }
         
+        api.post(AWS_DATA_QUERY_URL, {
+            parameters: ["temp", "pressure", "humidity", "tsAWS"],
+            start_timestamp: props.timestamps[0],
+            end_timestamp: props.timestamps[1],
+            devices: [props.deviceName]
+        }, { cancelToken: CancelTokenSource.token })
+        .then(res => {
+            setDeviceData(res.data);
+            // localStorage.setItem(
+            //     props.deviceName, 
+            //     JSON.stringify(Object.assign({ 
+            //         timestamps: props.timestamps, 
+            //         data: res.data
+            //     }))
+            // );
+        })
+        .catch(err => console.log(err))
+        
+        return () => {
+            CancelTokenSource.cancel("long request cancelled at re-render");
+            CancelTokenSource = axios.CancelToken.source();
+        }
+    }, [props.deviceName, props.timestamps, props.default]);
+    
+    if (deviceData) {
+        return deviceData.map((device, index) => {
+            let size = (props.viewportWidth <= 1700) ? "6" : "4";
+            
+            return (
+                <Col key={index} xl={size}>
+                    <Card>
+                        <CardBody style={{ padding: props.viewportWidth <= 680 ? 5 : '1.25rem' }} >
+                            <Button 
+                                className="btn-icon" 
+                                onClick={() => props.setSelectedDevice(getDeviceIndexFromName(device.deviceID)) }
+                                color="secondary">  
+                                <span className="btn-icon-label">
+                                    <i className="mdi mdi-bullseye-arrow mr-2"></i>
+                                </span> 
+                                {device.deviceID}
+                            </Button>
+                            <div id="area-chart">
+                                <Apexarea 
+                                    dataFiltering={props.dataFiltering}
+                                    device={device} 
+                                    left={props.displayParameters[0]} 
+                                    right={props.displayParameters[1]} />
+                            </div>
+                        </CardBody>
+                    </Card>
+                </Col>
+            )
+        })[0];
+    } else {
+        return content;
+    }
+}
+
+const Devices = props => {
+    // constants
+    const AAA = ["temp", "humidity", "pressure"];
+    const ALLOWED_DISPLAY_PARAMS = ["Temperature", "Humidity", "Pressure"];
+    const VIEWPORT_CHANGE_FLEX_PX = 1630;
+    const newTime = [
+        ['', Math.floor((Date.now() / 1000) - 1500000)],
+        ['', Math.floor(Date.now() / 1000)]
+    ];
+    
+    let sd = null;
+    if (props.location && props.location.state && props.location.state.selectedDevice) {
+        sd = getDeviceIndexFromName(props.location.state.selectedDevice)
+    }
+    
+    // state 
+    const [selectedDevice, setSelectedDevice] = useState(sd);
+    const [displayParameters, setDisplayParameters] = useState([0,1].map(i => ALLOWED_DISPLAY_PARAMS[i]));
+    const [viewportWidth, setViewportWidth] = useState(window.innerWidth);
+    const [dataFiltering, setDataFiltering] = useState(true);
+    const [defaultRange, setDefaultRange] = useState(true);
+    const [timestampsWithValue, setTimestampsWithValue] = useState(newTime)
+    const [timestamps, setTimestamps] = useState([newTime[0][1], newTime[1][1]])
+    
+    // functions
+    const toggleDisplayParameter = param => {
+        let currentParams = displayParameters.slice();
+        const i = currentParams.indexOf(param);
+        const j = currentParams.indexOf(null);
+        
+        if (i > -1) {
+            currentParams[i] = null;
+        } else if (j > -1) {
+            currentParams[j] = param;
+        } else {
+            currentParams[0] = param;
+        }
+        
+        setDisplayParameters(currentParams);
+        
+        if (document.getElementById('from-timestamp-input').value === timestampsWithValue[0][0] &&
+            document.getElementById('to-timestamp-input').value === timestampsWithValue[1][0]) {
+                setDefaultRange(true);
+            } else {
+                setDefaultRange(false);
+            }
+    }
+    const back = () => setSelectedDevice(null);
+    const updateViewportWidthOnResize = () => setViewportWidth(window.innerWidth);
+    const setTimestampsHandler = (from, to) => {
+        setTimestamps([from[1], to[1]]);
+        setTimestampsWithValue([from, to])
+        if (from[0] === "" && to[0] === "") {
+            setDefaultRange(true);
+        } else {
+            setDefaultRange(false);
+        }
+    };
+    
+    // render logic
+    useRouteMatch("/iot_devices");
+    let content; 
+    let backButton = '';
+    
+    props.activateAuthLayout();
+    
+    useEffect(() => {
+        window.addEventListener("resize", updateViewportWidthOnResize);
+        
+        return () => window.removeEventListener("resize", updateViewportWidthOnResize);
+    }, [])
+    
+    content = (
+        <Row style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap' }}>
+            { 
+                AWS_DEVICES.map(device => {
+                    return (
+                    <DeviceCard 
+                        dataFiltering={dataFiltering}
+                        deviceName={device}
+                        displayParameters={displayParameters}
+                        setSelectedDevice={setSelectedDevice}
+                        timestamps={timestamps}
+                        default={defaultRange}
+                        key={timestamps[0] + getRandomKey()}
+                        viewportWidth={viewportWidth} />
+                )}) 
+            }
+        </Row>
+    );
+    
+    // open a single device view if a device is selected
+    if (selectedDevice != null) {
+        let allowedParams = AAA.slice(0);
+        
+        backButton = (
+            <div className="col-sm-1">
+                <i className="ion ion-md-arrow-back devices_back_button" onClick={() => back()} />
+            </div>
+        );
+        content = '';
         content = (
-            <Row style={{ display: 'flex', justifyContent: 'center' }}>
-                {
-                    dummyData.allDevices.map((device, index) => {
-                        return (
-                            <Col key={index} xl="4">
-                                <Card>
-                                    <CardBody>
-                                        <h4 
-                                            style={{
-                                                cursor: 'pointer'
-                                            }}
-                                            onClick={() => { this.selectDevice(index) }}
-                                            className="mt-0 header-title mb-4">{device.name}</h4>
-                                        <div id="area-chart">
-                                            <Apexarea device={device} />
-                                        </div>
-                                    </CardBody>
-                                </Card>
-                            </Col>
-                        )
-                    })
+            <SingleDeviceView 
+                deviceName={AWS_DEVICES[selectedDevice]} 
+                displayParameters={displayParameters}
+                timestamps={timestamps}
+                key={timestamps[0] + getRandomKey()}
+                allowedParams={allowedParams} />
+        )
+    }
+    
+    let chkbox = '';
+    if (selectedDevice == null) {
+        chkbox = (
+            <div 
+                style={{ 
+                    padding: (viewportWidth <= VIEWPORT_CHANGE_FLEX_PX) ? '5px 25px' : '5px 50px', 
+                    margin: 0,
+                    display: 'flex',
+                    alignItems: 'center'
+                }} 
+                className="custom-control custom-checkbox">
+                { 
+                    (dataFiltering) ?
+                        <input 
+                            type="checkbox" 
+                            className="custom-control-input" 
+                            id="customCheck1" 
+                            onChange={() => setDataFiltering(!dataFiltering)}
+                            checked /> :
+                        <input 
+                            type="checkbox" 
+                            className="custom-control-input" 
+                            id="customCheck1" 
+                            onChange={() => setDataFiltering(!dataFiltering)} />
                 }
-            </Row>
-        ) 
-
-        if (this.state.selected != null) {
-            let device = dummyData.allDevices[this.state.selected];
-
-            backButton = (
-                <div className="col-sm-1">
-                    <i className="ion ion-md-arrow-back devices_back_button" onClick={() => {this.back();}}></i>
-                </div>
-            )
-
-            content = (
-                <Row style={{ display: 'flex'}}>
-                    <Col xl="6">
-                        <Card>
-                            <CardBody>
-                                <h4 className="mt-0 header-title mb-4">Tempterature readings</h4>
-                                <div id="area-chart">
-                                    <ApexareaReusable data={device.tempData} color={'#32a852'} />
-                                </div>
-                            </CardBody>
-                        </Card>
-                    </Col>
-                    <Col xl="6">
-                        <Card>
-                            <CardBody>
-                                <h4 className="mt-0 header-title mb-4">Pressure readings</h4>
-                                <div id="area-chart">
-                                    <ApexareaReusable data={device.pressureData} color={'#327da8'} />
-                                </div>
-                            </CardBody>
-                        </Card>
-                    </Col>
-                    <Col xl="6">
-                        <Card>
-                            <CardBody>
-                                <h4 className="mt-0 header-title mb-4">Humidity readings</h4>
-                                <div id="area-chart">
-                                    <ApexareaReusable data={device.humidityData} color={'#263257'} />
-                                </div>
-                            </CardBody>
-                        </Card>
-                    </Col>
-                </Row>
-            )
-        }
-
-
-        return (
-            <React.Fragment>
-                <div className="content">
-                    <div className="container-fluid">
-                        <div className="page-title-box">
-                            <div className="row align-items-center">
+                <label className="custom-control-label" htmlFor="customCheck1">Filter/Aggregate data to load charts faster</label>
+            </div>
+        )
+    }
+    
+    return (
+        <React.Fragment>
+            <div className="content">
+                <div className="container-fluid">
+                    <div className="page-title-box">
+                        <div style={{ 
+                            display: 'flex',  
+                            flexDirection: 'column'
+                        }}>
+                            <div style={{ display: "flex" }} >
                                 { backButton }
-                                <div className="col-sm-10">
+                                <div>
                                     <h4 className="page-title">Devices</h4>
                                     <ol className="breadcrumb">
                                         <li className="breadcrumb-item active">
                                             {
-                                                (this.state.selected != null) ? dummyData.allDevices[this.state.selected].name : 'All devices'
+                                                (selectedDevice != null) ? 
+                                                    AWS_DEVICES[selectedDevice] : 
+                                                    'All devices'
                                             }
                                         </li>
                                     </ol>
                                 </div>
-                                <div className={(this.state.selected != null) ? "col-sm-1" : "col-sm-2"}>
-                                    <div className="float-right d-none d-md-block">
-                                        <Settingmenu />
-                                    </div>
+                            </div>
+                            
+                            <div style={{ 
+                                display: 'flex', 
+                                alignItems: (viewportWidth <= VIEWPORT_CHANGE_FLEX_PX) ? "flex-start" : "center", 
+                                flexDirection: (viewportWidth <= VIEWPORT_CHANGE_FLEX_PX) ? "column" : "row"
+                            }} >
+                                <SimpleDateTimePicker setTimestamps={(from, to) => setTimestampsHandler(from, to)} />
+                                { chkbox }
+                                <div className="float-right d-none d-md-block">
+                                    <Row style={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        margin: 0
+                                    }} >
+                                        <p style={{ margin: 0, padding: 5 }}>Show parameters => </p>
+                                        {
+                                            ALLOWED_DISPLAY_PARAMS.map(param => {
+                                                if (displayParameters.indexOf(param) > -1) {
+                                                        return (
+                                                            <Button 
+                                                                key={displayParameters.indexOf(param)}
+                                                                color="success"
+                                                                style={{
+                                                                    margin: 5
+                                                                }}
+                                                                onClick={() => { toggleDisplayParameter(param) }}
+                                                                >{param}</Button>
+                                                        )
+                                                    } else {
+                                                        return (
+                                                            <Button
+                                                                key={getRandomKey()}
+                                                                outline
+                                                                color="info"
+                                                                style={{
+                                                                    margin: 5
+                                                                }}
+                                                                onClick={() => { toggleDisplayParameter(param) }}
+                                                                >{param}</Button>
+                                                        )
+                                                    }
+                                            })
+                                        }
+                                    </Row>
                                 </div>
                             </div>
+                            
                         </div>
-
-                        { content }
-
                     </div>
-                </div>
 
-                {/* <Rightsidebar>
-                    <DashboardRightSidebar />
-                </Rightsidebar> */}
-            </React.Fragment>
-        );
-    }
+                    { content }
+
+                </div>
+            </div>
+            
+        </React.Fragment>
+    );
 }
 
 export default withRouter(connect(null, { activateAuthLayout })(Devices));
-
 

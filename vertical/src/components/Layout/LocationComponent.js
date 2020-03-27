@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 import Locations from './Locations';
+import { activateAuthLayout } from '../../store/actions';
+import { withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
 
 const dummyData = {
     allDevices: [
@@ -22,10 +25,20 @@ const dummyData = {
     floors: ["floor1.png", "floor1m.png", "floor2.png"]
   }
 
-export default class LocationsComponent extends Component {
+class LocationsComponent extends Component {
+  
+    componentDidMount () {
+        this.props.activateAuthLayout();
+    }
+  
     render() {
         return(
             <Locations dummyData={dummyData}/>
         )
     }
+    
 }
+
+
+export default withRouter(connect(null, { activateAuthLayout })(LocationsComponent));
+

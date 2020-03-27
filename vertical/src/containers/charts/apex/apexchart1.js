@@ -23,7 +23,7 @@ class Apexchart1 extends Component {
                     curve: 'smooth',
                     width: 3
                   },
-                  colors: ['#4090cb'],
+                  colors: ['#008080'],
                   marker: {
                     show: false
                   },
@@ -51,7 +51,7 @@ class Apexchart1 extends Component {
 
     render() {
         const apexBarChartData = [{
-            data: this.props.data
+            data: this.props.data.filter((dataPoint, i) => i % 15 === 0)
           }];
 
         return (

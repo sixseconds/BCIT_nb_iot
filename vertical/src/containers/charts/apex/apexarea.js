@@ -1,18 +1,52 @@
 import React, { Component } from 'react';
 import ReactApexChart from 'react-apexcharts';
 
+const getTimeTextFromUnixTime = unixTime => {
+    const dateObj = new Date();
+
+    dateObj.setTime(unixTime);
+
+    // return something like 'Mar 03, 08:01'
+    return dateObj.toDateString().substr(4,dateObj.toDateString().length - 9) + " " + dateObj.toTimeString().substr(0,5)
+}
+
+const displayParamParsable = p => {
+    if (p === "Temperature") return "temp";
+    if (p === "Pressure") return "pressure";
+    if (p === "Humidity") return "humidity";
+}
+
+const getColors = params => {
+    return params.map(p => {
+        if (p === "Temperature") return '#008080';
+        if (p === "Humidity") return '#FFFF00';
+        if (p === "Pressure") return '#4B0082';
+        return '#008080';
+    })
+}
+
 class Apexarea extends Component {
 
     constructor(props) {
         super(props);
+        
+        let displayParams = []
+        
+        if (this.props.left !== null) displayParams.push(this.props.left);
+        if (this.props.right !== null) displayParams.push(this.props.right);
 
-        this.state = {
+        let stateObj = {
             options: {
                 chart: {
-                    type: 'area',   
+                    type: 'area',
                     foreColor: '#9f9ea4',
                     toolbar: {
                         show: true,
+                    },
+                    zoom: {
+                        type: 'x',
+                        enabled: true,
+                        autoScaleYaxis: false
                     }
                 },
                 dataLabels: {
@@ -22,56 +56,60 @@ class Apexarea extends Component {
                     curve: 'smooth',
                     width: 2
                 },
-                colors: ['#4090cb', '#003e6b'],
+                colors: getColors(displayParams),
                 xaxis: {
-                    categories: [...Array(this.props.device.readings+1).keys()].shift(),
+                    type: "text",
+                    tickPlacement: 'on'
                 },
+                yaxis: displayParams.map(p => {
+                    return {
+                        title: {
+                            text: p
+                        },
+                        seriesName: p
+                    }
+                }),
                 grid: {
                     yaxis: {
                         lines: {
                             show: false,
                         }
+                    },
+                    padding: {
+                        left: 30,
+                        right: 30
                     }
                 },
-            },
-                series : [{
-                    name: 'Temperature',
-                    data: this.props.device.tempData
-                }, {
-                    name: 'Pressure',
-                    data: this.props.device.pressureData
-                }]
-            
-            }
-
-        this.fetchIcons = this.fetchIcons.bind(this);
-        }
-
-    fetchIcons () {
-        fetch('http://localhost:3000/getdata')
-            .then(response => response.json())
-            .then(data => {
-                console.log(data)
-                this.setState({
-                    data: [data.temp]
+                series: displayParams.map(p => {
+                    return {
+                        name: p,
+                        data: this.props.device.tsAWS.map((ts, i) => {
+                            return {
+                                x: getTimeTextFromUnixTime(ts*1000),
+                                y: this.props.device[displayParamParsable(p)][i]
+                            }
+                        }).filter((dataPoint, i) => !props.dataFiltering || i % 15 === 0)
+                    }
                 })
-            })
-    }     
-
-    componentDidMount () {
-        this.fetchIcons();
+            }
+        }
+        
+        if (displayParams.length === 2) stateObj.options.yaxis[1].opposite = true; 
+        this.state = stateObj;
     }
 
     render() {
-
-        let d = (this.props.dynamo && this.state.data) ? this.state.data : this.state.series;
-
+        // console.log(this.props.device.tsAWS.length + ' => ' + this.state.options.series[0].data.length);
+        
+        // let x = this.props.device.tsAWS.sort((a, b) => a - b);
+        // console.log(x[0] + " to " + x[x.length-1])
+        
         return (
             <React.Fragment>
-                <ReactApexChart options={this.state.options} series={d} type="area" width="100%" height="299" />
+                <ReactApexChart id={this.props.device.deviceID} options={this.state.options} series={this.state.options.series} type="area" width="100%" height="299" />
             </React.Fragment>
         );
     }
 }
 
-export default Apexarea;   
+export default Apexarea;

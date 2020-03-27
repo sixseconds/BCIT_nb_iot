@@ -23,13 +23,8 @@ export default class Locations extends Component {
         this.state = {
             currentFloor: 0,
             floor: null,
-            
         };
-        
     }
-    
-    
-
 
     render() {
         
@@ -50,9 +45,8 @@ export default class Locations extends Component {
                                         padding: '0.5rem',
                                         cursor: "pointer",
                                         backgroundColor: (current) ? "black" : "transparent",
-                                        color: "white",
-                                        color: (current) ? "white" : "black",
-                                        marginLeft: "50px",
+                                        color: (current) ? "white" : "white",
+                                        marginLeft: "15%",
                                         marginTop: "70px"
                                     }} 
                                     onClick={() => this.setState({ currentFloor: i})}
@@ -69,6 +63,8 @@ export default class Locations extends Component {
                         devices={this.props.dummyData.allDevices.filter((device) => {
                             if (this.props.dummyData.floors[this.state.currentFloor] === device.location)
                                 return device
+                                
+                            return false
                         })} 
                     />
                 </div>
