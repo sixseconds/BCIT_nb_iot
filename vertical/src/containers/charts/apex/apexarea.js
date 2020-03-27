@@ -3,9 +3,9 @@ import ReactApexChart from 'react-apexcharts';
 
 const getTimeTextFromUnixTime = (unixTime) => {
     const dateObj = new Date();
-    
+
     dateObj.setTime(unixTime);
-    
+
     // return something like 'Mar 03, 08:01'
     return dateObj.toDateString().substr(4,dateObj.toDateString().length - 9) + " " + dateObj.toTimeString().substr(0,5)
 }
@@ -60,7 +60,7 @@ class Apexarea extends Component {
                         }
                     },
                     padding: {
-                        left: 30, 
+                        left: 30,
                         right: 30
                     }
                 },
@@ -95,4 +95,4 @@ class Apexarea extends Component {
     }
 }
 
-export default Apexarea;   
+export default Apexarea;
