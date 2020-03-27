@@ -17,7 +17,9 @@ export default class Floor extends Component {
         super(props);
         this.state = {
             
+            
         }   
+    
     }
 
     renderDeviceView() {
@@ -45,7 +47,7 @@ export default class Floor extends Component {
         console.log(this)
             return (
                 <div style={{ backgroundColor: "black" }}>
-                    <img style={{ width: "100%", backgroundSize: 'contain' }} src={this.props.image} alt={'floor'} />
+                    <img style={{ width: "70%", height: "50%", marginLeft: "15%"}} src={this.props.image} alt={'floor'} />
                     {this.renderDeviceView()}
                 </div>
             )

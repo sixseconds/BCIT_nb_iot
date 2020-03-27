@@ -45,13 +45,13 @@ export default class Locations extends Component {
                                         padding: '0.5rem',
                                         cursor: "pointer",
                                         backgroundColor: (current) ? "black" : "transparent",
-                                        color: (current) ? "white" : "black",
-                                        marginLeft: "50px",
+                                        color: (current) ? "white" : "white",
+                                        marginLeft: "15%",
                                         marginTop: "70px"
                                     }} 
                                     onClick={() => this.setState({ currentFloor: i})}
                                 >
-                                    {e.name}
+                                    {e.name}  
                                 </div>
                             )
                         })

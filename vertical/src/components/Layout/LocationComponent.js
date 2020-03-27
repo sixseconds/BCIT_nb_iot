@@ -9,7 +9,7 @@ const dummyData = {
       {
         id: 0,
         location: "floor1.png",
-        coords: ["15%", "65%"]
+        coords: ["35%", "55%"]
       },
       {
         id: 1,
