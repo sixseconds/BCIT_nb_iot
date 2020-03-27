@@ -57,7 +57,7 @@ export default class Locations extends Component {
                                     }} 
                                     onClick={() => this.setState({ currentFloor: i})}
                                 >
-                                    {e.name}
+                                    {e.name}  
                                 </div>
                             )
                         })
