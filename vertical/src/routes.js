@@ -1,5 +1,5 @@
 import Dashboard from './containers/MainContent/dashboard/dashboard';
-import Locations from './components/Layout/IoTLocations';
+import Locations from './components/Layout/Locations';
 import Parameters from './components/Parameters';
 import Devices from './components/Devices';
 
