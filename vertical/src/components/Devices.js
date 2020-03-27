@@ -12,7 +12,7 @@ import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 let api = axios.create({
-    baseURL: "http://104.223.143.151:3010"
+    baseURL: "http://54.189.101.20:3010"
 });
 
 const AWS_DEVICES = ["AWS1", "AWS2", "AWS3", "AWS4", "AWS5"];

@@ -7,7 +7,7 @@ import { Card, CardBody, Col, Row, Spinner } from 'reactstrap';
 import ApexareaReusable from '../containers/charts/apex/apexareaReusable';
 
 let api = axios.create({
-  baseURL: "http://104.223.143.151:3010"
+  baseURL: "http://54.189.101.20:3010"
 });
 
 const MAX_CONCURRENT_REQUESTS = 1;

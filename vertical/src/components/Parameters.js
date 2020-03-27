@@ -34,7 +34,7 @@ class Parameters extends Component {
 
   getData() {
     axios
-      .post("http://104.223.143.151:3010/aws_query_devices", {
+      .post("http://54.189.101.20:3010/aws_query_devices", {
         parameters: ["temp", "pressure", "humidity", "tsAWS"],
         start_timestamp: Math.floor(Date.now() / 1000 - 1500000),
         end_timestamp: Math.floor(Date.now() / 1000),

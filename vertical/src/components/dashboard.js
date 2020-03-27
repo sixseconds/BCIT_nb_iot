@@ -20,7 +20,7 @@ import BarChart from '../containers/charts/apex/bar_chart';
 // import Apexarea from '../../../containers/charts/apex/apexarea';
 
 let api = axios.create({
-    baseURL: "http://104.223.143.151:3010"
+    baseURL: "http://54.189.101.20:3010"
 });
   
 const MAX_CONCURRENT_REQUESTS = 1;
