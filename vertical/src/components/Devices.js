@@ -1,7 +1,6 @@
 import axios from 'axios';
 import { ConcurrencyManager } from "axios-concurrency";
 import React, { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
 import { useRouteMatch } from 'react-router-dom';
 import { Button, Card, CardBody, Col, Row, Spinner } from 'reactstrap';
 import Apexarea from '../containers/charts/apex/apexarea';
@@ -13,9 +12,11 @@ import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 let api = axios.create({
-    baseURL: "http://104.223.143.151:3010"
+    baseURL: "http://54.189.101.20:3010"
 });
-  
+
+const AWS_DEVICES = ["AWS1", "AWS2", "AWS3", "AWS4", "AWS5"];
+const getDeviceIndexFromName = name => AWS_DEVICES.indexOf(name);
 const MAX_CONCURRENT_REQUESTS = 1;
 ConcurrencyManager(api, MAX_CONCURRENT_REQUESTS);
 var CancelTokenSource = axios.CancelToken.source();
@@ -36,17 +37,15 @@ const DeviceCard = props => {
     );
     
     useEffect(() => {
-        const lsCheck = localStorage.getItem(props.deviceName);
+        // const lsCheck = localStorage.getItem(props.deviceName);
         
-        if (lsCheck) {
-            let d = JSON.parse(lsCheck);
-            if (props.default) {
-                setDeviceData(d.data);
-                return;
-            }
-        }
-        
-        console.log(props.timestamps)
+        // if (lsCheck) {
+        //     let d = JSON.parse(lsCheck);
+        //     if (props.default) {
+        //         setDeviceData(d.data);
+        //         return;
+        //     }
+        // }
         
         api.post(AWS_DATA_QUERY_URL, {
             parameters: ["temp", "pressure", "humidity", "tsAWS"],
@@ -56,13 +55,13 @@ const DeviceCard = props => {
         }, { cancelToken: CancelTokenSource.token })
         .then(res => {
             setDeviceData(res.data);
-            localStorage.setItem(
-                props.deviceName, 
-                JSON.stringify(Object.assign({ 
-                    timestamps: props.timestamps, 
-                    data: res.data
-                }))
-            );
+            // localStorage.setItem(
+            //     props.deviceName, 
+            //     JSON.stringify(Object.assign({ 
+            //         timestamps: props.timestamps, 
+            //         data: res.data
+            //     }))
+            // );
         })
         .catch(err => console.log(err))
         
@@ -76,16 +75,14 @@ const DeviceCard = props => {
         return deviceData.map((device, index) => {
             let size = (props.viewportWidth <= 1700) ? "6" : "4";
             
-            console.log(props.displayParameters)
-            
             return (
                 <Col key={index} xl={size}>
                     <Card>
-                        <CardBody>
+                        <CardBody style={{ padding: props.viewportWidth <= 680 ? 5 : '1.25rem' }} >
                             <Button 
                                 className="btn-icon" 
-                                onClick={() => props.setSelectedDevice(index) }
-                                color="secondary"> 
+                                onClick={() => props.setSelectedDevice(getDeviceIndexFromName(device.deviceID)) }
+                                color="secondary">  
                                 <span className="btn-icon-label">
                                     <i className="mdi mdi-bullseye-arrow mr-2"></i>
                                 </span> 
@@ -111,7 +108,6 @@ const DeviceCard = props => {
 const Devices = props => {
     // constants
     const AAA = ["temp", "humidity", "pressure"];
-    const AWS_DEVICES = ["AWS1", "AWS2", "AWS3", "AWS4", "AWS5"];
     const ALLOWED_DISPLAY_PARAMS = ["Temperature", "Humidity", "Pressure"];
     const VIEWPORT_CHANGE_FLEX_PX = 1630;
     const newTime = [
@@ -119,8 +115,13 @@ const Devices = props => {
         ['', Math.floor(Date.now() / 1000)]
     ];
     
+    let sd = null;
+    if (props.location && props.location.state && props.location.state.selectedDevice) {
+        sd = getDeviceIndexFromName(props.location.state.selectedDevice)
+    }
+    
     // state 
-    const [selectedDevice, setSelectedDevice] = useState(props.selectedDevice || null);
+    const [selectedDevice, setSelectedDevice] = useState(sd);
     const [displayParameters, setDisplayParameters] = useState([0,1].map(i => ALLOWED_DISPLAY_PARAMS[i]));
     const [viewportWidth, setViewportWidth] = useState(window.innerWidth);
     const [dataFiltering, setDataFiltering] = useState(true);
@@ -144,8 +145,6 @@ const Devices = props => {
         
         setDisplayParameters(currentParams);
         
-        console.log(timestampsWithValue)
-        
         if (document.getElementById('from-timestamp-input').value === timestampsWithValue[0][0] &&
             document.getElementById('to-timestamp-input').value === timestampsWithValue[1][0]) {
                 setDefaultRange(true);
@@ -165,26 +164,24 @@ const Devices = props => {
         }
     };
     
-    console.log('rendinerg')
-    
     // render logic
     useRouteMatch("/iot_devices");
     let content; 
     let backButton = '';
-    let dispatch = useDispatch();
+    
+    props.activateAuthLayout();
     
     useEffect(() => {
-        dispatch(props.activateAuthLayout());
-        
         window.addEventListener("resize", updateViewportWidthOnResize);
         
         return () => window.removeEventListener("resize", updateViewportWidthOnResize);
-    }, [dispatch])
+    }, [])
     
     content = (
         <Row style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap' }}>
             { 
-                AWS_DEVICES.map(device => (
+                AWS_DEVICES.map(device => {
+                    return (
                     <DeviceCard 
                         dataFiltering={dataFiltering}
                         deviceName={device}
@@ -194,7 +191,7 @@ const Devices = props => {
                         default={defaultRange}
                         key={timestamps[0] + getRandomKey()}
                         viewportWidth={viewportWidth} />
-                )) 
+                )}) 
             }
         </Row>
     );

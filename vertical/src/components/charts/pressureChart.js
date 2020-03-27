@@ -12,7 +12,7 @@ export class PressureChart extends Component {
             series: [{
                 name: 'Pressure',
                 type: 'line',
-                data: this.props.data
+                data: this.props.device.pressureData
             }],
             // Chart Styling
             options: {
@@ -46,8 +46,7 @@ export class PressureChart extends Component {
                 },
                 // X axis options
                 xaxis: {
-                    categories: ['Jan 12', 'Jan 13', 'Jan 14', 'Jan 15', 'Jan 16', 'Jan 17', 'Jan 18', 'Jan 19'],
-                    title: 'Day'
+                    categories: [...Array(this.props.device.readings + 1).keys()].shift(),
                 },
                 // Y axis options
                 // yaxis: {
@@ -86,8 +85,29 @@ export class PressureChart extends Component {
 
             },
         };
+
+        this.fetchIcons = this.fetchIcons.bind(this);
     }
+
+    fetchIcons() {
+        fetch('http://localhost:3000/getdata')
+            .then(response => response.json())
+            .then(data => {
+                console.log(data)
+                this.setState({
+                    data: [data.temp]
+                })
+            })
+    }
+
+    componentDidMount() {
+        this.fetchIcons();
+    }
+
     render() {
+
+        let d = (this.props.dynamo && this.state.data) ? this.state.data : this.state.series;
+
         return ( 
             <div className = 'app' >
                 <div className = 'row' >

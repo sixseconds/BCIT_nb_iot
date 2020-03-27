@@ -1,8 +1,9 @@
 import React from "react";
 
-import HumidityChart from '../charts/humidtiyChart.js';
-import TemperatureChart from '../charts/tempChart.js';
+import HumidityChart from '../charts/humidityChart';
+import TemperatureChart from '../charts/tempChart';
 import PressureChart from '../charts/pressureChart';
+
 
 function DeviceView(props) {
     return (
