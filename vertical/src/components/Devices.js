@@ -65,6 +65,8 @@ class Devices extends Component {
         this.toggleMessages = this.toggleMessages.bind(this);
         this.selectDevice = this.selectDevice.bind(this);
         this.back = this.back.bind(this);
+        if (this.props.selected) this.state.selected = this.props.selected
+        console.log(props.selected)
     }
 
     componentDidMount() {
@@ -108,6 +110,7 @@ class Devices extends Component {
 
         let content; 
         let backButton = ''; 
+        
         
         content = (
             <Row style={{ display: 'flex', justifyContent: 'center' }}>

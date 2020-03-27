@@ -50,6 +50,7 @@ export default class Locations extends Component {
                                         padding: '0.5rem',
                                         cursor: "pointer",
                                         backgroundColor: (current) ? "black" : "transparent",
+                                        color: "white",
                                         color: (current) ? "white" : "black",
                                         marginLeft: "50px",
                                         marginTop: "70px"

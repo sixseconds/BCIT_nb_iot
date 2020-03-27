@@ -18,7 +18,9 @@ export default class Floor extends Component {
         super(props);
         this.state = {
             
+            
         }   
+    
     }
 
 
@@ -26,7 +28,11 @@ export default class Floor extends Component {
     renderDeviceView() {
         return this.props.devices.map(
             device => (
-            <Link to="/iot_devices" >
+            <Link to={{pathname: "/iot_devices",
+        state: {
+            selected: device.id
+        }}}
+             >
                 <div 
                 className="device_blip"
                 key={device.id} 
@@ -43,7 +49,7 @@ export default class Floor extends Component {
         console.log(this)
             return (
                 <div style={{ backgroundColor: "black" }}>
-                    <img style={{ width: "100%", backgroundSize: 'contain' }} src={this.props.image} alt={'floor'} />
+                    <img style={{ width: "100%"}} src={this.props.image} alt={'floor'} />
                     {this.renderDeviceView()}
                 </div>
             )
