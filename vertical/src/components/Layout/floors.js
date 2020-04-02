@@ -8,7 +8,8 @@ const styles = {
         position: "absolute", 
         backgroundColor: "red", 
         borderRadius: "50%" ,
-        cursor: "pointer"
+        cursor: "pointer",
+        paddingLeft: 6
     }
 }
 
@@ -46,8 +47,8 @@ export default class Floor extends Component {
     renderImage() {
         console.log(this)
             return (
-                <div style={{ backgroundColor: "black" }}>
-                    <img style={{ width: "70%", height: "50%", marginLeft: "15%"}} src={this.props.image} alt={'floor'} />
+                <div style={{}}>
+                    <img style={{ width: "100%", height: "50%"}} src={this.props.image} alt={'floor'} />
                     {this.renderDeviceView()}
                 </div>
             )
