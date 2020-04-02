@@ -123,7 +123,6 @@ const Devices = props => {
     // state 
     const [selectedDevice, setSelectedDevice] = useState(sd);
     const [displayParameters, setDisplayParameters] = useState([0,1].map(i => ALLOWED_DISPLAY_PARAMS[i]));
-    const [viewportWidth, setViewportWidth] = useState(window.innerWidth);
     const [dataFiltering, setDataFiltering] = useState(true);
     const [defaultRange, setDefaultRange] = useState(true);
     const [timestampsWithValue, setTimestampsWithValue] = useState(newTime)
@@ -153,7 +152,6 @@ const Devices = props => {
             }
     }
     const back = () => setSelectedDevice(null);
-    const updateViewportWidthOnResize = () => setViewportWidth(window.innerWidth);
     const setTimestampsHandler = (from, to) => {
         setTimestamps([from[1], to[1]]);
         setTimestampsWithValue([from, to])
@@ -171,12 +169,6 @@ const Devices = props => {
     
     props.activateAuthLayout();
     
-    useEffect(() => {
-        window.addEventListener("resize", updateViewportWidthOnResize);
-        
-        return () => window.removeEventListener("resize", updateViewportWidthOnResize);
-    }, [])
-    
     content = (
         <Row style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap' }}>
             { 
@@ -190,7 +182,7 @@ const Devices = props => {
                         timestamps={timestamps}
                         default={defaultRange}
                         key={timestamps[0] + getRandomKey()}
-                        viewportWidth={viewportWidth} />
+                        viewportWidth={props.viewportWidth} />
                 )}) 
             }
         </Row>
@@ -221,7 +213,7 @@ const Devices = props => {
         chkbox = (
             <div 
                 style={{ 
-                    padding: (viewportWidth <= VIEWPORT_CHANGE_FLEX_PX) ? '5px 25px' : '5px 50px', 
+                    padding: (props.viewportWidth <= VIEWPORT_CHANGE_FLEX_PX) ? '5px 25px' : '5px 50px', 
                     margin: 0,
                     display: 'flex',
                     alignItems: 'center'
@@ -273,10 +265,10 @@ const Devices = props => {
                             
                             <div style={{ 
                                 display: 'flex', 
-                                alignItems: (viewportWidth <= VIEWPORT_CHANGE_FLEX_PX) ? "flex-start" : "center", 
-                                flexDirection: (viewportWidth <= VIEWPORT_CHANGE_FLEX_PX) ? "column" : "row"
+                                alignItems: (props.viewportWidth <= VIEWPORT_CHANGE_FLEX_PX) ? "flex-start" : "center", 
+                                flexDirection: (props.viewportWidth <= VIEWPORT_CHANGE_FLEX_PX) ? "column" : "row"
                             }} >
-                                <SimpleDateTimePicker setTimestamps={(from, to) => setTimestampsHandler(from, to)} />
+                                <SimpleDateTimePicker viewportWidth={props.viewportWidth} setTimestamps={(from, to) => setTimestampsHandler(from, to)} />
                                 { chkbox }
                                 <div className="float-right d-none d-md-block">
                                     <Row style={{
