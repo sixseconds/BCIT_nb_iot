@@ -37,16 +37,6 @@ const DeviceCard = props => {
     );
     
     useEffect(() => {
-        // const lsCheck = localStorage.getItem(props.deviceName);
-        
-        // if (lsCheck) {
-        //     let d = JSON.parse(lsCheck);
-        //     if (props.default) {
-        //         setDeviceData(d.data);
-        //         return;
-        //     }
-        // }
-        
         api.post(AWS_DATA_QUERY_URL, {
             parameters: ["temp", "pressure", "humidity", "tsAWS"],
             start_timestamp: props.timestamps[0],
@@ -55,13 +45,6 @@ const DeviceCard = props => {
         }, { cancelToken: CancelTokenSource.token })
         .then(res => {
             setDeviceData(res.data);
-            // localStorage.setItem(
-            //     props.deviceName, 
-            //     JSON.stringify(Object.assign({ 
-            //         timestamps: props.timestamps, 
-            //         data: res.data
-            //     }))
-            // );
         })
         .catch(err => console.log(err))
         
@@ -107,13 +90,18 @@ const DeviceCard = props => {
 
 const Devices = props => {
     // constants
+    const lsStartTs = localStorage.getItem('start_timestamp');
+    const lsEndTs = localStorage.getItem('end_timestamp');
     const AAA = ["temp", "humidity", "pressure"];
     const ALLOWED_DISPLAY_PARAMS = ["Temperature", "Humidity", "Pressure"];
     const VIEWPORT_CHANGE_FLEX_PX = 1630;
-    const newTime = [
-        ['', Math.floor((Date.now() / 1000) - 1500000)],
-        ['', Math.floor(Date.now() / 1000)]
-    ];
+    const newStartTs = Math.floor((Date.now() / 1000) - 1500000);
+    const newEndTs = Math.floor(Date.now() / 1000);
+    
+    if (!lsStartTs && !lsEndTs) {
+        localStorage.setItem('start_timestamp', newStartTs);
+        localStorage.setItem('end_timestamp', newEndTs);
+    }
     
     let sd = null;
     if (props.location && props.location.state && props.location.state.selectedDevice) {
@@ -125,8 +113,10 @@ const Devices = props => {
     const [displayParameters, setDisplayParameters] = useState([0,1].map(i => ALLOWED_DISPLAY_PARAMS[i]));
     const [dataFiltering, setDataFiltering] = useState(true);
     const [defaultRange, setDefaultRange] = useState(true);
-    const [timestampsWithValue, setTimestampsWithValue] = useState(newTime)
-    const [timestamps, setTimestamps] = useState([newTime[0][1], newTime[1][1]])
+    const [timestamps, setTimestamps] = useState([
+        parseInt(lsStartTs) || newStartTs, 
+        parseInt(lsEndTs) || newEndTs
+    ])
     
     // functions
     const toggleDisplayParameter = param => {
@@ -143,24 +133,10 @@ const Devices = props => {
         }
         
         setDisplayParameters(currentParams);
-        
-        if (document.getElementById('from-timestamp-input').value === timestampsWithValue[0][0] &&
-            document.getElementById('to-timestamp-input').value === timestampsWithValue[1][0]) {
-                setDefaultRange(true);
-            } else {
-                setDefaultRange(false);
-            }
     }
     const back = () => setSelectedDevice(null);
-    const setTimestampsHandler = (from, to) => {
-        setTimestamps([from[1], to[1]]);
-        setTimestampsWithValue([from, to])
-        if (from[0] === "" && to[0] === "") {
-            setDefaultRange(true);
-        } else {
-            setDefaultRange(false);
-        }
-    };
+    
+    console.log("hereeeeeeee" + timestamps)
     
     // render logic
     useRouteMatch("/iot_devices");
@@ -241,7 +217,7 @@ const Devices = props => {
     return (
         <React.Fragment>
             <div className="content">
-                <div className="container-fluid">
+                <div className={props.viewportWidth >= 1200 ? "container-fluid" : "container-fluid col-lg-7"}>
                     <div className="page-title-box">
                         <div style={{ 
                             display: 'flex',  
@@ -268,7 +244,9 @@ const Devices = props => {
                                 alignItems: (props.viewportWidth <= VIEWPORT_CHANGE_FLEX_PX) ? "flex-start" : "center", 
                                 flexDirection: (props.viewportWidth <= VIEWPORT_CHANGE_FLEX_PX) ? "column" : "row"
                             }} >
-                                <SimpleDateTimePicker viewportWidth={props.viewportWidth} setTimestamps={(from, to) => setTimestampsHandler(from, to)} />
+                                <SimpleDateTimePicker 
+                                    viewportWidth={props.viewportWidth} 
+                                    setTimestamps={(from, to) => setTimestamps([from, to])} />
                                 { chkbox }
                                 <div className="float-right d-none d-md-block">
                                     <Row style={{
@@ -285,7 +263,8 @@ const Devices = props => {
                                                                 key={displayParameters.indexOf(param)}
                                                                 color="success"
                                                                 style={{
-                                                                    margin: 5
+                                                                    margin: 5,
+                                                                    color: 'black'
                                                                 }}
                                                                 onClick={() => { toggleDisplayParameter(param) }}
                                                                 >{param}</Button>
