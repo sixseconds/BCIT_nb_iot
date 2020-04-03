@@ -1,57 +1,91 @@
 import React, { Component } from 'react';
 import Layout from './components/Layout/';
-import { withRouter, Route, Switch, BrowserRouter as Router, Redirect } from 'react-router-dom';
+import { withRouter, Route, Switch, BrowserRouter as Router } from 'react-router-dom';
+import Dashboard from './components/dashboard';
+import LocationsComponent from './components/Layout/LocationComponent';
+import Parameters from './components/Parameters';
+import Devices from './components/Devices';
 
-import routes from './routes';
 import './custom.css';
 import './App.scss';
 
-//Fake backend
-import fakeBackend from './helpers/fakeBackend';
-
-// Get all Auth methods
-import { isUserAuthenticated } from './helpers/authUtils';
-
-// Activating fake backend
-fakeBackend();
-
-function withLayout(WrappedComponent) {
-  // ...and returns another component...
-  return class extends React.Component {
-    render() {
-      return <Layout>
-        <WrappedComponent></WrappedComponent>
-      </Layout>
-    }
-  };
-}
+// function withLayout(WrappedComponent) {
+//   return class extends React.Component {
+//     render() {
+//       return <Layout>
+//         <WrappedComponent></WrappedComponent>
+//       </Layout>
+//     }
+//   };
+// }
 
 class App extends Component {
   constructor(props) {
     super(props);
-    this.state = {}
+    this.state = {
+      viewportWidth: window.innerWidth // should probably be in the redux store or something.
+    }
+    
+    this.updateViewportWidthOnResize = this.updateViewportWidthOnResize.bind(this);
+  }
+  
+  updateViewportWidthOnResize () {
+    this.setState({ viewportWidth: window.innerWidth })
+  }
+  
+  componentDidMount() {
+    window.addEventListener("resize", this.updateViewportWidthOnResize);
+  }
+
+  componentWillUnmount () {
+    window.removeEventListener("resize", this.updateViewportWidthOnResize);
   }
 
   render() {
-
-    const PrivateRoute = ({ component: Component, ...rest }) => (
-      <Route {...rest} render={(props) => (
-        isUserAuthenticated() === true
-          ? <Component {...props} />
-          : <Redirect to='/logout' />
-      )} />
-    )
 
     return (
       <React.Fragment>
         <Router>
           <Switch>
-            {routes.map((route, idx) =>
-              route.ispublic ?
-                <Route path={route.path} component={withLayout(route.component)} key={idx} />
-                :
-                <PrivateRoute path={route.path} component={withLayout(route.component)} key={idx} />
-            )}
+            
+            <Route exact path="/dashboard">
+              <Layout>
+                <Dashboard viewportWidth={this.state.viewportWidth} />
+              </Layout>
+            </Route>
+            
+            <Route exact path="/iot_devices">
+              <Layout>
+                <Devices viewportWidth={this.state.viewportWidth} />
+              </Layout>
+            </Route>
+            
+            <Route exact path="/iot_parameters">
+              <Layout>
+                <Parameters viewportWidth={this.state.viewportWidth} />
+              </Layout>
+            </Route>
+            
+            <Route exact path="/iot_locations">
+              <Layout>
+                <LocationsComponent viewportWidth={this.state.viewportWidth} />
+              </Layout>
+            </Route>
+            
+            <Route path="/">
+              <Layout>
+                <Dashboard viewportWidth={this.state.viewportWidth} />
+              </Layout>
+            </Route>
+            
+            {/* {
+              routes.map((route, index) => (
+                <Route path={route.path} key={index}>
+                  { route.component }
+                </Route>
+              ))
+            } */}
+            
           </Switch>
         </Router>
       </React.Fragment>

@@ -1,10 +1,8 @@
 import React, { Component } from 'react';
-import LanguageMenu from './Menus/languageMenu';
 import { Link } from 'react-router-dom';
 import { withRouter } from "react-router";
-import NotificationMenu from './Menus/notificationMenu';
-import ProfileMenu from './Menus/profileMenu';
-import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
+// import NotificationMenu from './Menus/notificationMenu';
+// import ProfileMenu from './Menus/profileMenu';
 import { connect } from 'react-redux';
 import { toggleSidebar  } from '../../store/actions';
 
@@ -12,7 +10,6 @@ import { toggleSidebar  } from '../../store/actions';
 
 import logoLight from "../../images/logo-light.png";
 import logoDark from "../../images/logo-dark.png";
-import logoSmall from "../../images/logo-sm.png";
 
 class Topbar extends Component {
 
@@ -33,6 +30,10 @@ class Topbar extends Component {
     sidebarToggle = () =>{
         document.body.classList.toggle('enlarged');
         this.props.toggleSidebar(!this.props.is_toggle);
+     }
+     
+     componentDidMount () {
+         this.sidebarToggle();
      }
 
     
@@ -65,9 +66,6 @@ class Topbar extends Component {
                             <span className="logo-light">
                                 {this.props.is_light ?  <img src={logoLight} alt="" height="16" /> :  <img src={logoDark} alt="" height="16" /> }
                             </span>
-                            <span className="logo-sm">
-                                <img src={logoSmall} alt="" height="22" />
-                            </span>
                         </Link>
                     </div>
 
@@ -82,16 +80,13 @@ class Topbar extends Component {
                                 </form>
                             </li>
 
-                            <LanguageMenu />
-
                             <li className="dropdown notification-list list-inline-item d-none d-md-inline-block mr-1">
                                 <Link onClick={this.toggleFullscreen} className="nav-link waves-effect" to="#" id="btn-fullscreen">
                                     <i className="ion ion-md-qr-scanner noti-icon"></i>
                                 </Link>
                             </li>
 
-                            <NotificationMenu />
-                            <ProfileMenu />
+                            {/* <NotificationMenu /> */}
                         </ul>
 
                         <ul className="list-inline menu-left mb-0">
@@ -102,19 +97,17 @@ class Topbar extends Component {
                             </li>
  
                             <li className="d-none d-sm-block">
-                            <Dropdown isOpen={this.state.create_menu} toggle={this.toggleCreate} className="pt-3 d-inline-block">
-                                <DropdownToggle className="btn btn-light" caret tag="a">
-                                    Create {' '}{' '}{' '}
-                                </DropdownToggle>
-                                <DropdownMenu >
-                                    <DropdownItem tag="a" href="#">Action</DropdownItem>
-                                    <DropdownItem tag="a" href="#">Another action</DropdownItem>
-                                    <DropdownItem tag="a" href="#">Something else here</DropdownItem>
-                                    <div className="dropdown-divider"></div>
-                                    <DropdownItem tag="a" href="#">Separated link</DropdownItem>
-                                </DropdownMenu>
-                            </Dropdown>
-                        </li>
+                                <div style={{
+                                    height: 70,
+                                    display: 'flex',
+                                    padding: 15,
+                                    alignItems: 'center'
+                                }}>
+                                    <h4 style={{ color: 'white', fontFamily: "Rubik", fontWeight: 200 }}>
+                                        BCIT IoT Dashboard
+                                    </h4>
+                                </div>
+                            </li>
                         </ul>
                     </nav>
                 </div>
