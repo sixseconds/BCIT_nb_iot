@@ -17,6 +17,8 @@ Before running either server, you must run npm install in both the root director
         - npm run build
         - serve -s build &
     
+User manual documentation can be found in Deliverables, along with the cloud services postmortem.
+
 # Directory structure
     .
     ├── node_modules    # for the root folder (express) 
