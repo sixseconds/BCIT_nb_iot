@@ -1,24 +1,14 @@
+import axios from 'axios';
+import { ConcurrencyManager } from "axios-concurrency";
 import React, { Component } from 'react';
-import { Row, Col, Card, CardBody, Spinner, Dropdown, Button, DropdownItem, DropdownMenu, DropdownToggle } from 'reactstrap';
-import { activateAuthLayout } from '../store/actions';
-import { withRouter, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { Link, withRouter } from 'react-router-dom';
+import { Button, Card, CardBody, Col, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Row, Spinner } from 'reactstrap';
 import Apexbar from '../containers/charts/apex/apexbar';
-import Apexradial from '../containers/charts/apex/apexradial';
-// import Settingmenu from '../Subpages/Settingmenu';
 import Knob from '../containers/charts/knob/Knob';
+import { activateAuthLayout } from '../store/actions';
 import SimpleDateTimePicker from './SimpleDateTimePicker';
 
-import { ConcurrencyManager } from "axios-concurrency";
-import axios from 'axios';
-
-import Apexchart1 from '../containers/charts/apex/apexchart1';
-import Apexchart2 from '../containers/charts/apex/apexchart2';
-import Apexchart3 from '../containers/charts/apex/apexchart3';
-import BarChart from '../containers/charts/apex/bar_chart';
-
-//Charts
-// import Apexarea from '../../../containers/charts/apex/apexarea';
 
 let api = axios.create({
     baseURL: "http://54.189.101.20:3010"
@@ -27,7 +17,6 @@ let api = axios.create({
 const MAX_CONCURRENT_REQUESTS = 1;
 ConcurrencyManager(api, MAX_CONCURRENT_REQUESTS);
 
-const getRandomKey = () => Math.floor(Math.random() * Math.floor(10000));
 const getTimeTextFromUnixTime = (unixTime, displayType) => {
     const dateObj = new Date();
     dateObj.setTime(unixTime * 1000);
